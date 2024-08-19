@@ -5,6 +5,6 @@ EventHub is a comprehensive solution that helps you easily manage every aspect o
 **PERN Stack**
 
 ## Design 
-Figma: https://www.figma.com/design/YoxkAK2CH3rpEPC2b5cIJU/EventHub?node-id=4-34&t=dYOSjD6owYJWNnen-1
+Figma: https://short.com.vn/mHqV
 
 ## Deploy
