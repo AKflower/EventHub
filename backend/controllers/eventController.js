@@ -1,7 +1,5 @@
-// controllers/eventController.js
 const db = require("../db"); // Kết nối tới PostgreSQL
 
-// Thêm một sự kiện mới
 const createEvent = async (req, res) => {
   const {
     logo,
@@ -55,7 +53,6 @@ const createEvent = async (req, res) => {
   }
 };
 
-// Lấy tất cả các sự kiện
 const getAllEvents = async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM events");
@@ -66,7 +63,6 @@ const getAllEvents = async (req, res) => {
   }
 };
 
-// Lấy sự kiện theo ID
 const getEventById = async (req, res) => {
   const { id } = req.params;
 
@@ -82,7 +78,6 @@ const getEventById = async (req, res) => {
   }
 };
 
-// Cập nhật thông tin sự kiện
 const updateEvent = async (req, res) => {
   const { id } = req.params;
   const {
@@ -141,7 +136,26 @@ const updateEvent = async (req, res) => {
   }
 };
 
-// Xóa sự kiện theo ID
+const softDeleteEvent = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await db.query(
+      "UPDATE events SET isDelete = TRUE WHERE id = $1",
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    res.status(200).json({ message: "Event soft deleted successfully" });
+  } catch (error) {
+    console.error("Error updating isDelete:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const deleteEvent = async (req, res) => {
   const { id } = req.params;
 
@@ -167,5 +181,6 @@ module.exports = {
   getAllEvents,
   getEventById,
   updateEvent,
+  softDeleteEvent,
   deleteEvent,
 };

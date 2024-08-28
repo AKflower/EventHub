@@ -1,7 +1,5 @@
-// controllers/bookingController.js
 const db = require("../db"); // Kết nối tới PostgreSQL
 
-// Thêm một booking mới
 const createBooking = async (req, res) => {
   const { userid, ticketids, mail, phone } = req.body;
 
@@ -17,7 +15,6 @@ const createBooking = async (req, res) => {
   }
 };
 
-// Lấy tất cả bookings
 const getAllBookings = async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM bookings");
@@ -28,7 +25,6 @@ const getAllBookings = async (req, res) => {
   }
 };
 
-// Lấy booking theo ID
 const getBookingById = async (req, res) => {
   const { id } = req.params;
 
@@ -44,7 +40,6 @@ const getBookingById = async (req, res) => {
   }
 };
 
-// Cập nhật thông tin booking
 const updateBooking = async (req, res) => {
   const { id } = req.params;
   const { userid, ticketids, mail, phone } = req.body;
@@ -64,7 +59,26 @@ const updateBooking = async (req, res) => {
   }
 };
 
-// Xóa booking theo ID
+const softDeleteBooking = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await db.query(
+      "UPDATE bookings SET isDelete = TRUE WHERE id = $1",
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json({ message: "Booking soft deleted successfully" });
+  } catch (error) {
+    console.error("Error updating isDelete:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const deleteBooking = async (req, res) => {
   const { id } = req.params;
 
@@ -90,5 +104,6 @@ module.exports = {
   getAllBookings,
   getBookingById,
   updateBooking,
+  softDeleteBooking,
   deleteBooking,
 };

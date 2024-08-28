@@ -8,6 +8,7 @@ router.post('/events', eventController.createEvent);
 router.get('/events', eventController.getAllEvents);
 router.get('/events/:id', eventController.getEventById);
 router.put('/events/:id', eventController.updateEvent);
+router.put('/events/:id/soft-delete', eventController.softDeleteEvent);
 router.delete('/events/:id', eventController.deleteEvent);
 
 module.exports = router;
