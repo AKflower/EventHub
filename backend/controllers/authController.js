@@ -1,6 +1,27 @@
-const db = require("../db"); // Kết nối tới PostgreSQL
+const db = require("../db"); 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+
+const sendVerificationEmail = async (email, verificationLink) => {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail', 
+    auth: {
+      user: 'your-email@gmail.com', 
+      pass: 'your-email-password',  
+    },
+  });
+
+  const mailOptions = {
+    from: 'your-email@gmail.com',
+    to: email,
+    subject: 'Email Verification',
+    html: `<p>Please verify your email by clicking the link: <a href="${verificationLink}">${verificationLink}</a></p>`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
 
 const register = async (req, res) => {
   const { password, fullName, phone, birth, gender, mail } = req.body;
@@ -15,11 +36,24 @@ const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+
     const result = await db.query(
-      `INSERT INTO users ( password, "fullName", phone, birth, gender, mail) 
-             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [hashedPassword, fullName, phone, birth, gender, mail]
+      `INSERT INTO users ( password, "fullName", phone, birth, gender, mail, emailVerificationToken) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [
+        hashedPassword,
+        fullName,
+        phone,
+        birth,
+        gender,
+        mail,
+        emailVerificationToken,
+      ]
     );
+
+    const verificationLink = `http://yourdomain.com/verify-email?token=${emailVerificationToken}`;
+    await sendVerificationEmail(mail, verificationLink);
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -27,6 +61,30 @@ const register = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+const verifyEmail = async (req, res) => {
+  const { token } = req.query;
+
+  try {
+    const result = await db.query(
+      `UPDATE users 
+       SET isEmailVerified = TRUE, emailVerificationToken = NULL
+       WHERE emailVerificationToken = $1
+       RETURNING *`,
+      [token]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).send('Invalid or expired token');
+    }
+
+    res.status(200).send('Email successfully verified!');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 const login = async (req, res) => {
   const { mail, password } = req.body;
@@ -67,6 +125,7 @@ const logout = (req, res) => {
 
 module.exports = {
   register,
+  verifyEmail,
   login,
   logout,
 };

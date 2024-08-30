@@ -12,7 +12,9 @@ CREATE TABLE users (
     "roleId" INTEGER NOT NULL,
     "isDelete" BOOLEAN DEFAULT FALSE,
     "createdTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    "modifiedTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    "modifiedTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "emailVerificationToken" VARCHAR(255),
+    "isEmailVerified" BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE bookings (
