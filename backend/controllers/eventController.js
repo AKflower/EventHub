@@ -42,7 +42,7 @@ const createEvent = async (req, res) => {
         startTime,
         endTime,
         accOwner,
-        accOwner,
+        accNumber,
         bank,
         branch,
         isFree,
@@ -66,13 +66,30 @@ const getAllEvents = async (req, res) => {
 };
 
 const getEventById = async (req, res) => {
-  const { id } = req.params;
+  const eventId = req.params.id;
 
   try {
-    const result = await db.query("SELECT * FROM events WHERE id = $1", [id]);
+    const result = await db.query(
+      `SELECT 
+          e.*, 
+          COALESCE(MIN(tt.price), 0) AS "minPrice"
+       FROM 
+          events e
+       LEFT JOIN 
+          "ticketTypes" tt 
+       ON 
+          e.id = tt."eventId"
+       WHERE 
+          e.id = $1
+       GROUP BY 
+          e.id`,
+      [eventId]
+    );
+
     if (result.rows.length === 0) {
-      return res.status(404).send("Event Not Found");
+      return res.status(404).send("Event not found");
     }
+
     res.status(200).json(result.rows[0]);
   } catch (err) {
     console.error(err);
