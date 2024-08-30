@@ -3,49 +3,49 @@ const db = require("../db"); // Kết nối tới PostgreSQL
 const createEvent = async (req, res) => {
   const {
     logo,
-    coverimg,
+    coverImg,
     name,
-    venuename,
+    venueName,
     city,
     district,
     ward,
     street,
     category,
     description,
-    starttime,
-    endtime,
-    accowner,
-    accnumber,
+    startTime,
+    endTime,
+    accOwner,
+    accNumber,
     bank,
     branch,
-    isfree,
+    isFree,
   } = req.body;
 
   try {
     const result = await db.query(
       `INSERT INTO events 
-            (logo, coverimg, name, venuename, city, district, ward, street, category, description, starttime, endtime, accowner, accnumber, bank, branch, isfree) 
+            (logo, "coverImg", name, "venueName", city, district, ward, street, category, description, "startTime", "endTime", "accOwner", "accNumber", bank, branch, "isFree") 
             VALUES 
             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) 
             RETURNING *`,
       [
         logo,
-        coverimg,
+        coverImg,
         name,
-        venuename,
+        venueName,
         city,
         district,
         ward,
         street,
         category,
         description,
-        starttime,
-        endtime,
-        accowner,
-        accnumber,
+        startTime,
+        endTime,
+        accOwner,
+        accOwner,
         bank,
         branch,
-        isfree,
+        isFree,
       ]
     );
     res.status(201).json(result.rows[0]);
@@ -94,7 +94,7 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
       queryText = `
       SELECT * FROM events
       WHERE category = ANY($1::text[]) 
-      AND isDelete = false;
+      AND "isDelete" = false;
     `;
 
       if (isFree !== undefined) {
@@ -123,7 +123,7 @@ const searchEventsByName = async (req, res) => {
     const queryText = `
       SELECT * FROM events
       WHERE name ILIKE $1
-        AND isDelete = false
+        AND "isDelete" = false
     `;
 
     const result = await db.query(queryText, [`%${name}%`]);
@@ -138,47 +138,49 @@ const updateEvent = async (req, res) => {
   const { id } = req.params;
   const {
     logo,
-    coverimg,
+    coverImg,
     name,
-    venuename,
+    venueName,
     city,
     district,
     ward,
     street,
     category,
     description,
-    starttime,
-    endtime,
-    accowner,
-    accnumber,
+    startTime,
+    endTime,
+    accOwner,
+    accNumber,
     bank,
     branch,
+    isFree,
   } = req.body;
 
   try {
     const result = await db.query(
       `UPDATE events SET 
-            logo = $1, coverimg = $2, name = $3, venuename = $4, city = $5, district = $6, ward = $7, street = $8, 
-            category = $9, description = $10, starttime = $11, endtime = $12, accowner = $13, accnumber = $14, 
-            bank = $15, branch = $16, modifiedtime = CURRENT_TIMESTAMP 
-            WHERE id = $17 RETURNING *`,
+            logo = $1, "coverImg" = $2, name = $3, "venueName" = $4, city = $5, district = $6, ward = $7, street = $8, 
+            category = $9, description = $10, "startTime" = $11, "endTime" = $12, "accOwner" = $13, "accNumber" = $14, 
+            bank = $15, branch = $16, "isFree" = $17, modifiedtime = CURRENT_TIMESTAMP 
+            WHERE id = $18 RETURNING *`,
       [
         logo,
-        coverimg,
+        coverImg,
         name,
-        venuename,
+        venueName,
         city,
         district,
         ward,
         street,
         category,
         description,
-        starttime,
-        endtime,
-        accowner,
-        accnumber,
+        startTime,
+        endTime,
+        accOwner,
+        accNumber,
         bank,
         branch,
+        isFree,
         id,
       ]
     );
@@ -197,7 +199,7 @@ const softDeleteEvent = async (req, res) => {
 
   try {
     const result = await db.query(
-      "UPDATE events SET isDelete = TRUE WHERE id = $1",
+      `UPDATE events SET "isDelete" = TRUE WHERE id = $1`,
       [id]
     );
 

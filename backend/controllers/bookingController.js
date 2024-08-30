@@ -1,12 +1,12 @@
-const db = require("../db"); // Kết nối tới PostgreSQL
+const db = require("../db");
 
 const createBooking = async (req, res) => {
-  const { userid, ticketids, mail, phone } = req.body;
+  const { userId, ticketIds, mail, phone } = req.body;
 
   try {
     const result = await db.query(
-      "INSERT INTO bookings (userid, ticketids, mail, phone) VALUES ($1, $2, $3, $4) RETURNING *",
-      [userid, ticketids, mail, phone]
+      `INSERT INTO bookings ("userId", "ticketIds", mail, phone) VALUES ($1, $2, $3, $4) RETURNING *`,
+      [userId, ticketIds, mail, phone]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -48,9 +48,8 @@ const getBookingsByDate = async (req, res) => {
   }
 
   try {
-    // Truy vấn để lấy danh sách bookings theo ngày
     const result = await db.query(
-      `SELECT * FROM bookings WHERE DATE(createdtime) = $1 AND isDelete = FALSE`,
+      `SELECT * FROM bookings WHERE DATE("createdTime") = $1 AND "isDelete" = FALSE`,
       [date]
     );
 
@@ -69,12 +68,11 @@ const getTotalBookingsByMonth = async (req, res) => {
   }
 
   try {
-    // Truy vấn để lấy tổng số lượng bookings trong tháng cụ thể
     const result = await db.query(
       `SELECT COUNT(*) AS total FROM bookings 
-          WHERE EXTRACT(MONTH FROM createdtime) = $1 
-          AND EXTRACT(YEAR FROM createdtime) = $2 
-          AND isDelete = FALSE`,
+          WHERE EXTRACT(MONTH FROM "createdTime") = $1 
+          AND EXTRACT(YEAR FROM "createdTime") = $2 
+          AND "isDelete" = FALSE`,
       [month, year]
     );
 
@@ -87,12 +85,12 @@ const getTotalBookingsByMonth = async (req, res) => {
 
 const updateBooking = async (req, res) => {
   const { id } = req.params;
-  const { userid, ticketids, mail, phone } = req.body;
+  const { userId, ticketIds, mail, phone } = req.body;
 
   try {
     const result = await db.query(
-      "UPDATE bookings SET userid = $1, ticketids = $2, mail = $3, phone = $4, modifiedtime = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *",
-      [userid, ticketids, mail, phone, id]
+      `UPDATE bookings SET "userId" = $1, "ticketIds" = $2, mail = $3, phone = $4, "modifiedTime" = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *`,
+      [userId, ticketIds, mail, phone, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).send("Booking Not Found");
@@ -109,7 +107,7 @@ const softDeleteBooking = async (req, res) => {
 
   try {
     const result = await db.query(
-      "UPDATE bookings SET isDelete = TRUE WHERE id = $1",
+      `UPDATE bookings SET "isDelete" = TRUE WHERE id = $1`,
       [id]
     );
 
