@@ -2,23 +2,21 @@ const db = require("../db");
 const bcrypt = require("bcrypt");
 
 const createUser = async (req, res) => {
-  const { username, password, fullname, phone, birth, gender, mail, role } =
-    req.body;
+  const { password, fullName, phone, birth, gender, mail, roleId } = req.body;
 
   try {
-    const userCheck = await db.query(
-      "SELECT * FROM users WHERE username = $1",
-      [username]
-    );
+    const userCheck = await db.query("SELECT * FROM users WHERE mail = $1", [
+      mail,
+    ]);
     if (userCheck.rows.length > 0) {
-      return res.status(400).json({ error: "Username already exists" });
+      return res.status(400).json({ error: "Mail already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await db.query(
-      "INSERT INTO users (username, password, fullname, phone, birth, gender, mail, role) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
-      [username, hashedPassword, fullname, phone, birth, gender, mail, role]
+      `INSERT INTO users (password, "fullName", phone, birth, gender, mail, "roleId") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [hashedPassword, fullName, phone, birth, gender, mail, roleId]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -43,7 +41,7 @@ const changePassword = async (req, res) => {
 
   try {
     const userResult = await db.query(
-      "SELECT password FROM users WHERE id = $1 AND isDelete = FALSE",
+      `SELECT password FROM users WHERE id = $1 AND "isDelete" = FALSE`,
       [id]
     );
 
@@ -92,12 +90,12 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { username, password, fullname, phone, birth, gender, mail } = req.body;
+  const { password, fullName, phone, birth, gender, mail } = req.body;
 
   try {
     const result = await db.query(
-      "UPDATE users SET username = $1, password = $2, fullname = $3, phone = $4, birth = $5, gender = $6, mail = $7 WHERE id = $8 RETURNING *",
-      [username, password, fullname, phone, birth, gender, mail, id]
+      `UPDATE users SET password = $1, "fullName" = $2, phone = $3, birth = $4, gender = $5, mail = $6 WHERE id = $7 RETURNING *`,
+      [password, fullName, phone, birth, gender, mail, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).send("User Not Found");
@@ -114,7 +112,7 @@ const softDeleteUser = async (req, res) => {
 
   try {
     const result = await db.query(
-      "UPDATE users SET isDelete = TRUE WHERE id = $1",
+      `UPDATE users SET "isDelete" = TRUE WHERE id = $1`,
       [id]
     );
 

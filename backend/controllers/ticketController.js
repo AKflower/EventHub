@@ -1,13 +1,13 @@
 const db = require("../db"); // Kết nối tới PostgreSQL
 
 const createTicket = async (req, res) => {
-  const { typeid, eventid } = req.body;
+  const { typeId, eventId } = req.body;
 
   try {
     const result = await db.query(
-      `INSERT INTO tickets (typeid, eventid) 
+      `INSERT INTO tickets ("typeId", "eventId") 
              VALUES ($1, $2) RETURNING *`,
-      [typeid, eventid]
+      [typeId, eventId]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -33,21 +33,21 @@ const getTicketById = async (req, res) => {
     const query = `
           SELECT 
               tickets.id,
-              tickettypes.name AS ticket_type_name,
-              tickettypes.price,
-              tickettypes.starttime,
-              tickettypes.endtime,
-              tickettypes.description AS ticket_description,
+              "ticketTypes".name AS ticket_type_name,
+              "ticketTypes".price,
+              "ticketTypes"."startTime",
+              "ticketTypes"."endTime",
+              "ticketTypes".description AS ticket_description,
               events.name AS event_name,
-              events.venuename,
+              events."venueName",
               events.city,
               events.district,
               events.ward,
               events.street
           FROM tickets
-          JOIN tickettypes ON tickets.typeid = tickettypes.id
-          JOIN events ON tickets.eventid = events.id
-          WHERE tickets.id = $1 AND tickets.isDelete = FALSE
+          JOIN "ticketTypes" ON tickets."typeId" = "ticketTypes".id
+          JOIN events ON tickets."eventId" = events.id
+          WHERE tickets.id = $1 AND tickets."isDelete" = FALSE
       `;
 
     const result = await db.query(query, [id]);
@@ -65,14 +65,14 @@ const getTicketById = async (req, res) => {
 
 const updateTicket = async (req, res) => {
   const { id } = req.params;
-  const { typeid, eventid } = req.body;
+  const { typeId, eventId } = req.body;
 
   try {
     const result = await db.query(
       `UPDATE tickets SET 
-             typeid = $1, eventid = $2, modifiedtime = CURRENT_TIMESTAMP 
+             "typeId" = $1, "eventId" = $2, "modifiedTime" = CURRENT_TIMESTAMP 
              WHERE id = $3 RETURNING *`,
-      [typeid, eventid, id]
+      [typeId, eventId, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).send("Ticket Not Found");
@@ -89,7 +89,7 @@ const softDeleteTicket = async (req, res) => {
 
   try {
     const result = await db.query(
-      "UPDATE tickets SET isDelete = TRUE WHERE id = $1",
+      `UPDATE tickets SET "isDelete" = TRUE WHERE id = $1`,
       [id]
     );
 
