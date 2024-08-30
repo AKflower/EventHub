@@ -40,6 +40,51 @@ const getBookingById = async (req, res) => {
   }
 };
 
+const getBookingsByDate = async (req, res) => {
+  const { date } = req.query;
+
+  if (!date) {
+    return res.status(400).json({ message: "Ngày không hợp lệ" });
+  }
+
+  try {
+    // Truy vấn để lấy danh sách bookings theo ngày
+    const result = await db.query(
+      `SELECT * FROM bookings WHERE DATE(createdtime) = $1 AND isDelete = FALSE`,
+      [date]
+    );
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Lỗi server");
+  }
+};
+
+const getTotalBookingsByMonth = async (req, res) => {
+  const { month, year } = req.query;
+
+  if (!month || !year) {
+    return res.status(400).json({ message: "Tháng và năm không hợp lệ" });
+  }
+
+  try {
+    // Truy vấn để lấy tổng số lượng bookings trong tháng cụ thể
+    const result = await db.query(
+      `SELECT COUNT(*) AS total FROM bookings 
+          WHERE EXTRACT(MONTH FROM createdtime) = $1 
+          AND EXTRACT(YEAR FROM createdtime) = $2 
+          AND isDelete = FALSE`,
+      [month, year]
+    );
+
+    res.status(200).json({ total: result.rows[0].total });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Lỗi server");
+  }
+};
+
 const updateBooking = async (req, res) => {
   const { id } = req.params;
   const { userid, ticketids, mail, phone } = req.body;
@@ -103,6 +148,8 @@ module.exports = {
   createBooking,
   getAllBookings,
   getBookingById,
+  getBookingsByDate,
+  getTotalBookingsByMonth,
   updateBooking,
   softDeleteBooking,
   deleteBooking,

@@ -18,14 +18,15 @@ const createEvent = async (req, res) => {
     accnumber,
     bank,
     branch,
+    isfree,
   } = req.body;
 
   try {
     const result = await db.query(
       `INSERT INTO events 
-            (logo, coverimg, name, venuename, city, district, ward, street, category, description, starttime, endtime, accowner, accnumber, bank, branch) 
+            (logo, coverimg, name, venuename, city, district, ward, street, category, description, starttime, endtime, accowner, accnumber, bank, branch, isfree) 
             VALUES 
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) 
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) 
             RETURNING *`,
       [
         logo,
@@ -44,6 +45,7 @@ const createEvent = async (req, res) => {
         accnumber,
         bank,
         branch,
+        isfree,
       ]
     );
     res.status(201).json(result.rows[0]);
@@ -74,6 +76,60 @@ const getEventById = async (req, res) => {
     res.status(200).json(result.rows[0]);
   } catch (err) {
     console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getEventsByCategoryAndIsFree = async (req, res) => {
+  const { categories, isFree } = req.query;
+
+  const categoryList = Array.isArray(categories) ? categories : [categories];
+
+  try {
+    const queryText = "SELECT * FROM events";
+    if (isFree !== undefined && categories !== undefined) {
+      const result = await db.query(queryText);
+      res.status(200).json(result.rows);
+    } else {
+      queryText = `
+      SELECT * FROM events
+      WHERE category = ANY($1::text[]) 
+      AND isDelete = false;
+    `;
+
+      if (isFree !== undefined) {
+        queryText += ` AND isFree = $2`;
+      }
+      const values =
+        isFree !== undefined ? [categoryList, isFree] : [categoryList];
+
+      const result = await db.query(queryText, values);
+      res.status(200).json(result.rows);
+    }
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const searchEventsByName = async (req, res) => {
+  const { name } = req.query;
+
+  try {
+    if (!name) {
+      return res.status(400).send("Name query parameter is required");
+    }
+
+    const queryText = `
+      SELECT * FROM events
+      WHERE name ILIKE $1
+        AND isDelete = false
+    `;
+
+    const result = await db.query(queryText, [`%${name}%`]);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error searching events by name:", err);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -180,6 +236,8 @@ module.exports = {
   createEvent,
   getAllEvents,
   getEventById,
+  getEventsByCategoryAndIsFree,
+  searchEventsByName,
   updateEvent,
   softDeleteEvent,
   deleteEvent,

@@ -1,4 +1,5 @@
-SET timezone = 'Asia/Ho_Chi_Minh';
+SET
+    timezone = 'Asia/Ho_Chi_Minh';
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -18,7 +19,7 @@ CREATE TABLE users (
 CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
     userid INTEGER NOT NULL,
-    ticketids INTEGER[] NOT NULL,
+    ticketids INTEGER [] NOT NULL,
     mail VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     isDelete BOOLEAN DEFAULT FALSE,
@@ -61,6 +62,7 @@ CREATE TABLE events (
     accnumber VARCHAR(50),
     bank VARCHAR(100),
     branch VARCHAR(100),
+    isFree BOOLEAN DEFAULT FALSE,
     isDelete BOOLEAN DEFAULT FALSE,
     createdtime TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     modifiedtime TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
@@ -75,35 +77,31 @@ CREATE TABLE tickets (
     modifiedtime TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE OR REPLACE FUNCTION update_modified_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.modifiedtime = NOW();
-    RETURN NEW;
+CREATE
+OR REPLACE FUNCTION update_modified_column() RETURNS TRIGGER AS $ $ BEGIN NEW.modifiedtime = NOW();
+
+RETURN NEW;
+
 END;
-$$ LANGUAGE plpgsql;
 
-CREATE TRIGGER set_modified_time
-BEFORE UPDATE ON users
-FOR EACH ROW
-EXECUTE FUNCTION update_modified_column();
+$ $ LANGUAGE plpgsql;
 
-CREATE TRIGGER set_modified_time_bookings
-BEFORE UPDATE ON bookings
-FOR EACH ROW
-EXECUTE FUNCTION update_modified_column();
+CREATE TRIGGER set_modified_time BEFORE
+UPDATE
+    ON users FOR EACH ROW EXECUTE FUNCTION update_modified_column();
 
-CREATE TRIGGER set_modified_time_tickettypes
-BEFORE UPDATE ON tickettypes
-FOR EACH ROW
-EXECUTE FUNCTION update_modified_column();
+CREATE TRIGGER set_modified_time_bookings BEFORE
+UPDATE
+    ON bookings FOR EACH ROW EXECUTE FUNCTION update_modified_column();
 
-CREATE TRIGGER set_modified_time_events
-BEFORE UPDATE ON events
-FOR EACH ROW
-EXECUTE FUNCTION update_modified_column();
+CREATE TRIGGER set_modified_time_tickettypes BEFORE
+UPDATE
+    ON tickettypes FOR EACH ROW EXECUTE FUNCTION update_modified_column();
 
-CREATE TRIGGER set_modified_time_tickets
-BEFORE UPDATE ON tickets
-FOR EACH ROW
-EXECUTE FUNCTION update_modified_column();
+CREATE TRIGGER set_modified_time_events BEFORE
+UPDATE
+    ON events FOR EACH ROW EXECUTE FUNCTION update_modified_column();
+
+CREATE TRIGGER set_modified_time_tickets BEFORE
+UPDATE
+    ON tickets FOR EACH ROW EXECUTE FUNCTION update_modified_column();

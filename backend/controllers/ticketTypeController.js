@@ -68,6 +68,22 @@ const getTicketTypeById = async (req, res) => {
   }
 };
 
+const getTicketTypesByEventId = async (req, res) => {
+  const { eventid } = req.params;
+
+  try {
+      const result = await db.query(
+          `SELECT * FROM tickettypes WHERE eventid = $1 AND isDelete = FALSE`,
+          [eventid]
+      );
+
+      res.status(200).json(result.rows);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Lỗi server');
+  }
+};
+
 const updateTicketType = async (req, res) => {
   const { id } = req.params;
   const {
@@ -158,6 +174,7 @@ module.exports = {
   createTicketType,
   getAllTicketTypes,
   getTicketTypeById,
+  getTicketTypesByEventId,
   updateTicketType,
   softDeleteTicketType,
   deleteTicketType,

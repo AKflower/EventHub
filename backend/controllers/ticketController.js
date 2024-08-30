@@ -30,14 +30,36 @@ const getTicketById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await db.query("SELECT * FROM tickets WHERE id = $1", [id]);
+    const query = `
+          SELECT 
+              tickets.id,
+              tickettypes.name AS ticket_type_name,
+              tickettypes.price,
+              tickettypes.starttime,
+              tickettypes.endtime,
+              tickettypes.description AS ticket_description,
+              events.name AS event_name,
+              events.venuename,
+              events.city,
+              events.district,
+              events.ward,
+              events.street
+          FROM tickets
+          JOIN tickettypes ON tickets.typeid = tickettypes.id
+          JOIN events ON tickets.eventid = events.id
+          WHERE tickets.id = $1 AND tickets.isDelete = FALSE
+      `;
+
+    const result = await db.query(query, [id]);
+
     if (result.rows.length === 0) {
-      return res.status(404).send("Ticket Not Found");
+      return res.status(404).send("Ticket không tồn tại");
     }
+
     res.status(200).json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Lỗi server");
   }
 };
 
