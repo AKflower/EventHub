@@ -1,0 +1,26 @@
+.container{
+    
+    background-color: #F5F7F8;
+    padding: 1em 8em;
+    border-radius: 5px;
+    .searchInput{
+        display: flex;
+        flex-direction: row;
+        gap:1em;
+    }
+    input {
+        font-family: 'Montserrat';
+        border: 1px solid silver;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        padding: .2em 1em;
+        font-size: 1.1em;
+        width: 100%;
+    }
+    .filter{
+        display: grid;
+        grid-template-columns: repeat(6,1fr);
+        padding: 1em 0;
+        gap: 2em;
+    }
+}

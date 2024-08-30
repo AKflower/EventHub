@@ -1,0 +1,17 @@
+.container{
+    button{
+        background: rgb(31, 149, 167);
+        border: none;
+        border-radius: 10px;
+        width: 100%;
+        padding: 1em 0;
+        color: white;
+        font-weight: 700;
+        font-family: 'Montserrat';
+        cursor: pointer;
+        
+        &:hover{
+            box-shadow: 1px 2px 5px silver;
+        }
+    }
+}

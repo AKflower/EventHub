@@ -1,0 +1,14 @@
+.container{
+    background-color: #fff;
+    width: 100vw;
+    position: fixed;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    padding: 1em;
+    .options{
+        display: flex;
+        justify-content: flex-end;
+        margin: 0 2em 0 0;
+    }
+}
