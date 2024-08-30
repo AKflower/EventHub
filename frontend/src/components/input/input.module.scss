@@ -1,0 +1,23 @@
+.inputContainer{
+    display: flex;
+    flex-direction: column;
+    input {
+        margin-top: .5em;
+        background: white;
+        border:1px solid silver;
+        padding: .2em .5em;
+        border-radius: 10px;
+        height: 2em;
+        font-size: 1.2em;
+        font-family: 'Montserrat';
+    }
+    textarea {
+        height: 10em;
+        background: white;
+        border:1px solid silver;
+        padding: .5em .5em;
+        border-radius: 10px;
+        font-family: 'Montserrat';
+    }
+
+}

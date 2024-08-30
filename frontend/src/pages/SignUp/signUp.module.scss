@@ -1,0 +1,36 @@
+.container{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    width: 100%;
+    height: 100vh;
+    .cover {
+        background-image: url('../../assets/img/sign-up-cover.png');
+        background-size: cover;
+    }
+    .right {
+        position: relative;
+        background-color: #379777;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        .header {
+            color: white;
+        }
+        .form {
+            width: 80%;
+            div {
+                margin: .4em 0;
+            }
+        }
+        .footer{
+            position: absolute;
+            bottom: 1em;
+            
+        }
+    }
+}
+a {
+    text-decoration: none;
+    color: #F4CE14;
+}

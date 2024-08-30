@@ -1,0 +1,49 @@
+.infor{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    background-color: #F5F7F8;
+    border-radius: 5px;
+    gap:1em;
+    .coverContainer{
+        padding: 1em;
+        .cover{
+            background-size: cover;
+            min-height: 15em;
+            width: 100%;
+            border-radius: 5px;
+        }
+    }
+    
+}
+.subInfor{
+    margin-top: 2em;
+    display: grid;
+    
+    grid-template-columns: 2fr 1fr;
+    gap: 2em;
+    .description{
+        background-color: #F5F7F8;
+        padding: 1em;
+        border-radius: 5px;
+        h3 {
+            margin: 0;
+            border-bottom: 1px solid silver;
+            padding: 0 0 1em 0;
+        }
+        p {
+            font-size: 14px;
+           
+           
+        }
+    }
+    .price{
+        background-color: #F5F7F8;
+        border-radius: 5px;
+        padding: 1em;
+        h3 {
+            margin: 0;
+            border-bottom: 1px solid silver;
+            padding: 0 0 1em 0;
+        }
+    }
+}

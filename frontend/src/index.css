@@ -1,8 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Montserrat';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -10,4 +8,44 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.main {
+  background-color: #474747;
+  min-height: 100vh;
+  padding: 6em 2em 2em 2em;
+}
+
+.divider{
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 80%;
+  margin: 1em 0 0 0;
+  color: #F4CE14;
+}
+
+.line {
+  flex-grow: 1;
+  border: none;
+  border-top: 1px solid #ccc;  /* Đường kẻ */
+  margin: 0 10px;  /* Khoảng cách giữa chữ "or" và đường kẻ */
+}
+.d-flex {
+  display: flex;
+}
+.x-center {
+  justify-content: center;
+}
+.y-center {
+  align-items: center;
+}
+.gap-1 {
+  gap:1em;
+}
+.gap-2 {
+  gap:2em;
+}
+.gap-3 {
+  gap:3em;
 }
