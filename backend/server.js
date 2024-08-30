@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const port = 3001;
+const cors = require('cors')
 
 const db = require('./db'); // Kết nối tới PostgreSQL
 const userRoutes = require('./routes/userRoutes');
@@ -13,6 +14,7 @@ const authRoutes = require('./routes/authRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 
 app.use(express.json());
+app.use(cors());
 app.use('/api', userRoutes);
 app.use('/api', bookingRoutes);
 app.use('/api', eventRoutes);
