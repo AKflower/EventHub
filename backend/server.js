@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const port = 3001;
+const cors = require('cors')
 
 const db = require("./db");
 const userRoutes = require("./routes/userRoutes");
@@ -22,6 +23,7 @@ app.use("/api", ticketTypeRoutes);
 app.use("/api", ticketRoutes);
 app.use("/api", authRoutes);
 app.use("/api", paymentRoutes);
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
