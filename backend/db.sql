@@ -84,10 +84,10 @@ CREATE TABLE roles (
 );
 
 
-CREATE OR REPLACE FUNCTION update_modified_column_tickets()
+CREATE OR REPLACE FUNCTION update_modified_column()
 RETURNS TRIGGER AS $$
 BEGIN
-    NEW.modifiedtime = NOW();
+    NEW."modifiedTime" = NOW();
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

@@ -98,35 +98,31 @@ const getEventById = async (req, res) => {
 };
 
 const getEventsByCategoryAndIsFree = async (req, res) => {
-  const { categories, isFree } = req.query;
-  
+  const { categories, isFree, city } = req.query;
 
   const categoryList = Array.isArray(categories) ? categories : [categories];
 
   try {
-    const queryText = "SELECT * FROM events";
-    if (categories == undefined) {
-      if (isFree !== undefined) {
-        queryText += ` AND isFree = $2`;
-      }
-      const result = await db.query(queryText);
-      res.status(200).json(result.rows);
-    } else {
-      queryText = `
-      SELECT * FROM events
-      WHERE category = ANY($1::text[]) 
-      AND "isDelete" = false;
-    `;
+    let queryText = 'SELECT * FROM events WHERE "isDelete" = false';
+    const values = [];
 
-      if (isFree !== undefined) {
-        queryText += ` AND isFree = $2`;
-      }
-      const values =
-        isFree !== undefined ? [categoryList, isFree] : [categoryList];
-
-      const result = await db.query(queryText, values);
-      res.status(200).json(result.rows);
+    if (categories !== undefined) {
+      queryText += " AND category = ANY($1::text[])";
+      values.push(categoryList);
     }
+
+    if (isFree !== undefined) {
+      queryText += ` AND "isFree" = $${values.length + 1}`;
+      values.push(isFree);
+    }
+
+    if (city !== undefined) {
+      queryText += ` AND city = $${values.length + 1}`;
+      values.push(city);
+    }
+
+    const result = await db.query(queryText, values);
+    res.status(200).json(result.rows);
   } catch (err) {
     console.error("Error fetching events:", err);
     res.status(500).send("Internal Server Error");
