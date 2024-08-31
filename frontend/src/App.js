@@ -9,6 +9,8 @@ import Home from './pages/Home/home';
 import Events from './pages/Events/events';
 import EventDetail from './pages/EventDetail/eventDetail';
 import { UserProvider, useUserContext} from './context/UserContext'
+import Booking from './pages/Booking/booking';
+import Payment from './pages/Payment/payment';
 
 function App() {
   return (
@@ -21,7 +23,9 @@ function App() {
         <Route path='/sign-up' element={<SignUp />}/>
         <Route path="/home" element={<Home />} />
         <Route path="/events/detail/:eventId" element={<EventDetail />} />
-        <Route path="/events/:eventTypeId" element={<Events />} />
+        <Route path="/events/:category" element={<Events />} />
+        <Route path='/booking' element={<Booking />}/>
+        <Route path='/booking/payment' element={<Payment />}/>
 
       </Routes>
       <ToastContainer />

@@ -1,6 +1,8 @@
 import styles from './search.module.scss'
 import Button from '../button/button'
 import Select from '../select/select'
+import eventService from '../../services/eventService'
+
 
 export default function Search() {
     return (

@@ -1,0 +1,84 @@
+.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 1em 0 2em 0;
+    .statusItem{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        .circle{
+            height: 2em;
+            width: 2em;
+            border: 1px solid silver;
+            border-radius: 50%;
+        }
+        .statusName{
+            width: 6em;
+            text-align: center;
+            gap:1em;
+            color: silver;
+        }
+        .line {
+            width: 3.8em;
+            border: 1px solid silver;
+            position: absolute;
+            right: -2em;
+            top: 19%;
+        }
+    }
+    .statusItemActive{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        .circle{
+            height: 2em;
+            width: 2em;
+            border: 1px solid silver;
+            border-radius: 50%;
+            background-color: green;
+            background-size: cover;
+        }
+        .statusName{
+            width: 6em;
+            text-align: center;
+            gap:1em;
+            color: rgb(255, 255, 255);
+        }
+        .line {
+            width: 3.8em;
+            border: 1px solid silver;
+            position: absolute;
+            right: -2em;
+            top: 19%;
+        }
+    }
+    .statusItemNow{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        .circle{
+            height: 2em;
+            width: 2em;
+            border: 1px solid #F4CE14;
+            border-radius: 50%;
+            
+        }
+        .statusName{
+            width: 6em;
+            text-align: center;
+            gap:1em;
+            color: #F4CE14;
+        }
+        .line {
+            width: 3.8em;
+            border: 1px solid silver;
+            position: absolute;
+            right: -2em;
+            top: 19%;
+        }
+    }
+}
