@@ -14,19 +14,23 @@ export default function Search() {
                     
                     options={[
                         {
-                            value: 0,
+                            value: '',
                             label: 'Tất cả thể loại',
                         },
                         {
-                            value: 1,
+                            value: 'Music',
                             label: 'Âm nhạc',
                         },
                         {
-                            value: 2,
+                            value: 'Sport',
                             label: 'Thể thao',
                         },
                         {
-                            value: 3,
+                            value: 'Theater & Art',
+                            label: 'Sân khấu & Nghệ thuật',
+                        },
+                        {
+                            value: 'Others',
                             label: 'Sự kiện khác',
                         }
                     ]}

@@ -99,6 +99,7 @@ const getEventById = async (req, res) => {
 
 const getEventsByCategoryAndIsFree = async (req, res) => {
   const { categories, isFree } = req.query;
+  
 
   const categoryList = Array.isArray(categories) ? categories : [categories];
 
