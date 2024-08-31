@@ -8,9 +8,11 @@ import Header from './components/header/header';
 import Home from './pages/Home/home';
 import Events from './pages/Events/events';
 import EventDetail from './pages/EventDetail/eventDetail';
+import { UserProvider, useUserContext} from './context/UserContext'
 
 function App() {
   return (
+    <UserProvider>
     <BrowserRouter>
       <Header />
       <Routes>
@@ -24,6 +26,7 @@ function App() {
       </Routes>
       <ToastContainer />
     </BrowserRouter>
+    </UserProvider>
   );
 }
 

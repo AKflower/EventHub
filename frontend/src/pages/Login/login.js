@@ -4,12 +4,18 @@ import Button from '../../components/button/button'
 import icon from '../../assets/icon/icon'
 import ButtonWithIcon from '../../components/buttonWithIcon/buttonWithIcon'
 import  { Link, useSearchParams, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState,useEffect} from 'react'
 import authService from '../../services/authService'
 
 
 export default function Login () {
     const navigate = useNavigate()
+    const token = localStorage.getItem('token');
+
+    useEffect(() => {
+        if (token) navigate('/home');
+    },[])
+   
     const [formData,setFormData] = useState({
         mail: '',
         password: ''
@@ -28,6 +34,7 @@ export default function Login () {
         try {
             const res = await authService.login(formData);
             localStorage.setItem('token',res.token)
+            localStorage.setItem('userId',res.userId)
             navigate('/home')
         }
         catch (err) {
