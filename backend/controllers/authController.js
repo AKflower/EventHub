@@ -8,13 +8,13 @@ const sendVerificationEmail = async (email, verificationLink) => {
   const transporter = nodemailer.createTransport({
     service: 'Gmail', 
     auth: {
-      user: 'your-email@gmail.com', 
-      pass: 'your-email-password',  
+      user: 'eventhub173@gmail.com', 
+      pass: 'ibai twbs skiz olry',  
     },
   });
 
   const mailOptions = {
-    from: 'your-email@gmail.com',
+    from: 'eventhub173@gmail.com',
     to: email,
     subject: 'Email Verification',
     html: `<p>Please verify your email by clicking the link: <a href="${verificationLink}">${verificationLink}</a></p>`,
@@ -52,7 +52,7 @@ const register = async (req, res) => {
       ]
     );
 
-    const verificationLink = `http://yourdomain.com/verify-email?token=${emailVerificationToken}`;
+    const verificationLink = `http://localhost:3001/api/auth/verify-email?token=${emailVerificationToken}`;
     await sendVerificationEmail(mail, verificationLink);
 
     res.status(201).json(result.rows[0]);

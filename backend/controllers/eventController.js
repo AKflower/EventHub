@@ -104,7 +104,10 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
 
   try {
     const queryText = "SELECT * FROM events";
-    if (isFree !== undefined && categories !== undefined) {
+    if (categories == undefined) {
+      if (isFree !== undefined) {
+        queryText += ` AND isFree = $2`;
+      }
       const result = await db.query(queryText);
       res.status(200).json(result.rows);
     } else {
