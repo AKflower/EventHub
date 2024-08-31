@@ -7,10 +7,10 @@ export default function EventItem ({event}) {
     const navigate = useNavigate()
     console.log(event);
     return (
-        <div className={styles.event} style={{ backgroundImage: `url(${event.coverImg})` }} onClick={() => navigate('/events/detail/1')}>
+        <div className={styles.event} style={{ backgroundImage: `url(${event.coverImg})` }} onClick={() => navigate(`/events/detail/${event.id}`)}>
                         <div className={styles.eventInfor}>
                             <div className={styles.content}>
-                                <h4>{event.name}</h4>
+                                <h5>{event.name}</h5>
                                 <div className={styles.footer}>
                                     <div className={styles.price}>
                                         <img src={icon.priceIcon} style={{ width: '1.5em' }} />

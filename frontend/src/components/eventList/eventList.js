@@ -3,10 +3,25 @@ import coverImg1 from '../../assets/img/coverImg1.png'
 import icon from '../../assets/icon/icon'
 import EventItem from '../eventItem/eventItem'
 import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import eventService from '../../services/eventService'
 
 
-export default function EventList() {
+export default function EventList({ category, isShort }) {
     const navigate = useNavigate()
+    const [events, setEvents] = useState([]);
+    const fetchEvents = async () => {
+        const res = await eventService.getEventsByCategoryAndIsFree(category)
+        var data = []
+        if (isShort) {
+            data = await res.filter((item, index) => index <= 2)
+            setEvents(data)
+        }
+        else setEvents(res);
+    }
+    useEffect(() => {
+        fetchEvents()
+    }, [])
     const data = [
         {
             name: 'Yên Concert',
@@ -29,15 +44,29 @@ export default function EventList() {
 
 
     ]
+    const convertTitleCategory = (a) => {
+        switch (a) {
+            case 'Music':
+                return 'Âm nhạc'
+            case 'Sport':
+                return 'Thể thao'
+            case 'Theaters & Art':
+                return 'Sân khấu & Nghệ thuật'
+            case 'Others':
+                return 'Sự kiện khác'
+        }
+    }
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h3>Âm nhạc</h3>
-                <p onClick={() => navigate(`/events/1`)} style={{cursor:'pointer'}}>Xem thêm</p>
+                <h3>{
+                    convertTitleCategory(category) 
+                }</h3>
+                {isShort && <p onClick={() => navigate(`/events/${category}`)} style={{ cursor: 'pointer' }}>Xem thêm</p>}
             </div>
             <div className={styles.events}>
-                {data.map((event) => (
-                   <EventItem event={event}/>
+                {events.map((event) => (
+                    <EventItem event={event} />
                 ))}
             </div>
 

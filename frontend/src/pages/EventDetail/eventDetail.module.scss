@@ -4,6 +4,7 @@
     background-color: #F5F7F8;
     border-radius: 5px;
     gap:1em;
+
     .coverContainer{
         padding: 1em;
         .cover{
@@ -11,6 +12,27 @@
             min-height: 15em;
             width: 100%;
             border-radius: 5px;
+        }
+    }
+    .content {
+        position: relative;
+        .info{
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            color: #379777;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 0 1em 0 0;
+            .date {
+                display: flex;
+                align-items: center;
+                gap: 1em;
+            }
+            .location {
+                display: flex;
+                align-items: center;
+                gap: 1em;
+            }
         }
     }
     

@@ -1,0 +1,97 @@
+.container{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap:2em;
+   
+    .payment{
+        h3 {
+            margin: 0;
+        }
+        padding: 1em;
+        border-radius: 5px;
+        background-color: #F5F7F8;
+        .paymentMethod {
+            display: flex;
+            align-items: center;
+            gap:1.5em;
+            margin: 1em 0;
+            input {
+                width: 1.5em;
+                height: 1.5em;
+            };
+            .content{
+                display: flex;
+                flex-direction: row;
+                gap:1em;
+                .icon{
+                    width: 4em;
+                    height: 4em;
+                    background-size: cover;
+                }
+            }
+            
+            
+        }
+    }
+    .infor {
+        display: flex;
+        flex-direction: column;
+        gap:1em;
+        .userInfo {
+            h3 {
+                margin: 0 0 0 0;
+            }
+            background-color: #F5F7F8;
+            padding: 1em;
+            border-radius: 5px;
+            .info{
+                display: flex;
+                gap:2em;
+                font-weight: 500;
+                p {
+                    margin: .5em 0;
+                }
+            }
+        }
+        .ticketInfo{
+            h3 {
+                margin: 0 0 1em 0;
+            }
+            background-color: #F5F7F8;
+            padding: 1em;
+            border-radius: 5px;
+            .table{
+                display: grid;
+                grid-template-columns: repeat(2,1fr);
+                .left{
+                    display: flex;
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+                .right{
+                    display: flex;
+                    align-items: flex-end;
+                    flex-direction: column;
+                }
+            }
+            .ticket{
+                display: grid;
+                grid-template-columns: repeat(2,1fr);
+                padding: 1em 0;
+                border-bottom: 1px solid silver;
+                gap:.5em;
+                .left{
+                    display: flex;
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+                .right{
+                    display: flex;
+                    align-items: flex-end;
+                    flex-direction: column;
+                } 
+            }
+        }
+    }
+
+}

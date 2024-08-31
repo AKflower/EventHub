@@ -70,7 +70,7 @@ const getTicketTypeById = async (req, res) => {
 
 const getTicketTypesByEventId = async (req, res) => {
   const { eventId } = req.params;
-
+  console.log(eventId);
   try {
       const result = await db.query(
           `SELECT * FROM "ticketTypes" WHERE "eventId" = $1 AND "isDelete" = FALSE`,

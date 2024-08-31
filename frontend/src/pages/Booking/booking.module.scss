@@ -1,0 +1,31 @@
+.infor{
+    font-size: 14px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    background-color: #F5F7F8;
+    gap: 1em;
+    border-radius: 5px;
+    .userInfor {
+        padding: 3em 3em 2em 3em;
+        div {
+            margin: 1em 0;
+        }
+    }
+    .ticketInfor{
+        padding: 1em;
+        border-left: 1px dashed silver;
+        
+    }
+    .table{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        .left{
+            display: flex;
+            justify-content: flex-start;
+        }
+        .right{
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}
