@@ -10,6 +10,7 @@ const ticketTypeRoutes = require("./routes/ticketTypeRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const authRoutes = require("./routes/authRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const galleryRoutes = require("./routes/galleryRoutes");
 
 app.use(cors());
 
@@ -21,7 +22,7 @@ app.use("/api", ticketTypeRoutes);
 app.use("/api", ticketRoutes);
 app.use("/api", authRoutes);
 app.use("/api", paymentRoutes);
-
+app.use("/api", galleryRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

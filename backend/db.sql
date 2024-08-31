@@ -39,16 +39,26 @@ CREATE TABLE "ticketTypes" (
     "startTime" TIMESTAMP NOT NULL,
     "endTime" TIMESTAMP NOT NULL,
     description TEXT,
-    img BYTEA,
+    img INTEGER,
     "isDelete" BOOLEAN DEFAULT FALSE,
     "createdTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     "modifiedTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE Galleries (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    data BYTEA NOT NULL,
+    "isDelete" BOOLEAN DEFAULT FALSE,
+    "createdTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "modifiedTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+
 CREATE TABLE events (
     id SERIAL PRIMARY KEY,
-    logo BYTEA,
-    "coverImg" BYTEA,
+    logo INTEGER,
+    "coverImg" INTEGER,
     name VARCHAR(255) NOT NULL,
     "venueName" VARCHAR(255) NOT NULL,
     city VARCHAR(100) NOT NULL,
