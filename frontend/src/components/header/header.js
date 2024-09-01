@@ -16,20 +16,20 @@ export default function Header () {
         setSessionInfo(res);
     }
     useEffect(() => {
-        fetchSession();
+       if (userId) fetchSession();
     },[])
     
     if (path=='/login' || path=='/sign-up') return;
     return (
         <div className={styles.container}>
-            <div>EventHub </div>
+            <div style={{fontFamily:'Londrina Solid',fontSize:'2em'}}><span style={{color:'#379777' }}>Event</span><span style={{color:'#000'}}>Hub</span> </div>
             <div className={styles.options}>
            
             {
                 !sessionInfo ?
                 <Button name={'Đăng nhập | Đăng ký'} borderRadius='50px' width={'15em'} color='#379777' onClick={() => navigate('/login')}/>
                 :
-                <div>{sessionInfo.fullName}</div>
+                <div className='d-flex y-center'>{sessionInfo.fullName}</div>
             }
             
                 

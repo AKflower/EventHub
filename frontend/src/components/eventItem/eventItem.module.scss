@@ -1,5 +1,6 @@
 .event{
     min-height: 12.5em;
+    min-width: 20em;
     background-size: cover;
     border-radius: 5px;
     position: relative;
@@ -9,7 +10,7 @@
         opacity: 1;
     }
     .eventInfor{
-        opacity: .5;
+        opacity: .7;
         .content{
             padding: 0 .5em;
             

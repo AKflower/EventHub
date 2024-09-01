@@ -43,11 +43,11 @@ export default function Payment() {
                     <div className={styles.userInfo}>
                         <h3>Thông tin nhận vé</h3>
                         <div className={styles.info}>
-                            <p>Anh Khoa</p>
-                            <p>0364438082</p>
+                            <p>Nguyen Van A</p>
+                            <p>012758432</p>
                         </div>
                         <div className={styles.info}>
-                            <p>anhkhoabqv@gmail.com</p>
+                            <p>nguyenvana@gmail.com</p>
                         </div>
                     </div>
                     <div className={styles.ticketInfo}>

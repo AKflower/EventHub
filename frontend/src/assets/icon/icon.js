@@ -8,6 +8,8 @@ import atm from './atm.svg'
 import calendarGreenIcon from './calendarGreen.svg'
 import locationIcon from './location.svg'
 import priceGreenIcon from './priceGreen.svg'
+import minusIcon from './minus1.svg'
+import plusIcon from './plus1.svg'
 
 const icon = {
     googleIcon,
@@ -19,7 +21,9 @@ const icon = {
     vnpay,
     calendarGreenIcon,
     locationIcon,
-    priceGreenIcon
+    priceGreenIcon,
+    minusIcon,
+    plusIcon
 }
 
 export default icon;
