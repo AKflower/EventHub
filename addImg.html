@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Image</title>
+</head>
+<body>
+    <h1>Add Image to Gallery</h1>
+    <form action="http://localhost:3001/api/galleries" method="POST" enctype="multipart/form-data">
+        <label for="name">Image Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="image">Select Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" required><br><br>
+        <button type="submit">Upload</button>
+    </form>
+    <img src="http://localhost:3001/api/galleries/1" alt="Image 1" />
+</body>
+</html>
