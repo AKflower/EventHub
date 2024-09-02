@@ -24,8 +24,9 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/events/detail/:eventId" element={<EventDetail />} />
         <Route path="/events/:category" element={<Events />} />
-        <Route path='/booking' element={<Booking />}/>
-        <Route path='/booking/payment' element={<Payment />}/>
+        <Route path='/booking/:bookingId' element={<Booking />}/>
+        <Route path='/booking/:bookingId/payment' element={<Payment />}/>
+        <Route path='/booking/:bookingId/payment-success' element={<Payment status={1}/>}/>
 
       </Routes>
       <ToastContainer />

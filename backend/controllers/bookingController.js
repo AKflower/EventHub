@@ -1,12 +1,12 @@
 const db = require("../db");
 
 const createBooking = async (req, res) => {
-  const { userId, ticketIds, mail, phone } = req.body;
+  const { userId, eventId, ticketInfo } = req.body;
 
   try {
     const result = await db.query(
-      `INSERT INTO bookings ("userId", "ticketIds", mail, phone) VALUES ($1, $2, $3, $4) RETURNING *`,
-      [userId, ticketIds, mail, phone]
+      `INSERT INTO bookings ("userId", "eventId", "ticketInfo") VALUES ($1, $2, $3) RETURNING *`,
+      [userId, eventId, ticketInfo ]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -102,6 +102,24 @@ const updateBooking = async (req, res) => {
   }
 };
 
+const updateStatusBookingPaid = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query(
+      `UPDATE bookings SET "statusId" = 3, "modifiedTime" = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *`,
+      [ id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).send("Booking Not Found");
+    }
+    // res.status(200).json(result.rows[0]);
+    res.redirect(`http://localhost:3000/booking/${result.rows[0].id}/payment-success`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 const softDeleteBooking = async (req, res) => {
   const { id } = req.params;
 
@@ -151,4 +169,5 @@ module.exports = {
   updateBooking,
   softDeleteBooking,
   deleteBooking,
+  updateStatusBookingPaid
 };

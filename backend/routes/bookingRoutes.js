@@ -8,6 +8,7 @@ router.get('/bookings/:id', bookingController.getBookingById);
 router.get('/bookings/by-date', bookingController.getBookingsByDate);
 router.get('/bookings/total', bookingController.getTotalBookingsByMonth);
 router.put('/bookings/:id', bookingController.updateBooking);
+router.get('/bookings/:id/paysuccess', bookingController.updateStatusBookingPaid);
 router.put('/bookings/:id/soft-delete', bookingController.softDeleteBooking);
 router.delete('/bookings/:id', bookingController.deleteBooking);
 

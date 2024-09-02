@@ -9,9 +9,13 @@ import icon from '../../assets/icon/icon'
 import ticketTypeService from '../../services/ticketTypeService'
 import Button from '../../components/button/button'
 import galleryService from '../../services/galleryService'
+import bookingService from '../../services/bookingService'
+import { useUserContext } from '../../context/UserContext'
+
 
 export default function EventDetail() {
     const { eventId } = useParams();
+    const { sessionInfo } = useUserContext()
 
     const navigate = useNavigate();
 
@@ -39,6 +43,21 @@ export default function EventDetail() {
         fetchEvent();
         fetchTicketTypes()
     }, [])
+
+    const handleBooking = async () => {
+        var ticketInfo = ticketTypes.filter((ticket) => ticket.booked > 0)
+        .map((ticket) => ({
+            ticketTypeId: ticket.id,
+            quant: ticket.booked,
+        }))
+
+        const res = await bookingService.createBooking({
+            userId: sessionInfo.id,
+            eventId: eventId,
+            ticketInfo: JSON.stringify(ticketInfo),
+        })
+        navigate(`/booking/${res.id}`);
+    }
 
     const handleDescrease = async (id) => {
         console.log(id);
@@ -188,7 +207,7 @@ export default function EventDetail() {
                             color={total ? '#379777' : 'silver'}
                             onClick={() => {
                                 if (total > 0) {
-                                    navigate(`/booking`)
+                                    handleBooking()
                                 }
                             }} /></div>
                 </div>
