@@ -45,7 +45,7 @@ CREATE TABLE "ticketTypes" (
     "modifiedTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Galleries (
+CREATE TABLE galleries (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     data BYTEA NOT NULL,
