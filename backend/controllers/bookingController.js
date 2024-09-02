@@ -7,7 +7,7 @@ const createBooking = async (req, res) => {
   try {
     const result = await db.query(
       `INSERT INTO bookings ("userId", "eventId", "ticketInfo") VALUES ($1, $2, $3) RETURNING *`,
-      [userId, eventId, ticketInfo ]
+      [userId, eventId, ticketInfo]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -40,6 +40,75 @@ const getBookingById = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+const getBookingByUserIdAndFilter = async (req, res) => {
+  const { userId } = req.params;
+  // Cập nhật filter sau
+  const { statusId } = req.query;
+  var query = '';
+  console.log('stauts: ',statusId)
+  if (statusId == 0) {
+    query = `SELECT 
+    b.*,
+    COALESCE(ARRAY_AGG(
+        JSON_BUILD_OBJECT(
+            'ticketId', t."id",
+            'typeId', t."typeId",
+            'eventId', t."eventId"
+        )
+    ) FILTER (WHERE t."id" IS NOT NULL), '{}') AS tickets
+FROM 
+    bookings b
+LEFT JOIN 
+    tickets t 
+ON 
+    b."id" = t."bookingId"
+WHERE 
+    b."userId" = $1 
+    AND b."isDelete" = FALSE
+    AND (b."statusId" = 3 OR b."statusId" = 4)
+GROUP BY 
+    b."id"
+ORDER BY
+    b."eventId";`
+  }
+  else {
+    query = `SELECT 
+    b.*,
+    COALESCE(ARRAY_AGG(
+        JSON_BUILD_OBJECT(
+            'ticketId', t."id",
+            'typeId', t."typeId",
+            'eventId', t."eventId"
+        )
+    ) FILTER (WHERE t."id" IS NOT NULL), '{}') AS tickets
+FROM 
+    bookings b
+LEFT JOIN 
+    tickets t 
+ON 
+    b."id" = t."bookingId"
+WHERE 
+    b."userId" = $1 
+    AND b."isDelete" = FALSE
+    AND b."statusId" = $2
+GROUP BY 
+    b."id"
+    ORDER BY
+    b."eventId";`
+  }
+  try {
+    const result = await db.query(
+      query,
+      statusId!=0 ? [userId, statusId] : [userId]
+    );
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+}
 
 const getBookingsByDate = async (req, res) => {
   const { date } = req.query;
@@ -108,12 +177,12 @@ const updateStatusBookingPaid = async (req, res) => {
   try {
     const result = await db.query(
       `UPDATE bookings SET "statusId" = 3, "modifiedTime" = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *`,
-      [ id]
+      [id]
     );
     if (result.rows.length === 0) {
       return res.status(404).send("Booking Not Found");
     }
-    const createTicketResult = await ticketController.createMultipleTickets(result.rows[0].ticketInfo,result.rows[0].eventId);
+    const createTicketResult = await ticketController.createMultipleTickets(result.rows[0].ticketInfo, result.rows[0].eventId, id);
     // res.status(200).json(result.rows[0]);
     res.redirect(`http://localhost:3000/booking/${result.rows[0].id}/payment-success`);
   } catch (err) {
@@ -171,5 +240,6 @@ module.exports = {
   updateBooking,
   softDeleteBooking,
   deleteBooking,
-  updateStatusBookingPaid
+  updateStatusBookingPaid,
+  getBookingByUserIdAndFilter
 };

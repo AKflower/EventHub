@@ -123,7 +123,7 @@ const deleteTicket = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-const createMultipleTickets = async (ticketInfo,eventId) => {
+const createMultipleTickets = async (ticketInfo,eventId, bookingId) => {
   console.log(ticketInfo,eventId);
 
   if (!ticketInfo || !Array.isArray(ticketInfo)) {
@@ -141,9 +141,9 @@ const createMultipleTickets = async (ticketInfo,eventId) => {
 
       for (let i = 0; i < quant; i++) {
         const result = await db.query(
-          `INSERT INTO tickets ("typeId", "eventId") 
-               VALUES ($1, $2) RETURNING *`,
-          [ticketTypeId, eventId]
+          `INSERT INTO tickets ("typeId", "eventId","bookingId") 
+               VALUES ($1, $2,$3) RETURNING *`,
+          [ticketTypeId, eventId, bookingId]
         );
         tickets.push(result.rows[0]);
       }

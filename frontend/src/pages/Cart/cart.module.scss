@@ -1,0 +1,24 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    .cart {
+        .header {
+            color: white;
+            border-bottom: 1px solid silver;
+            padding: 0 0 .5em 0;
+        }
+        .tabContainer{
+            display: flex;
+            flex-direction: row;
+            gap: 1em;
+            .tab{
+                padding: .5em 1em;
+                background-color: #fff;
+                border-radius: 20px;
+                font-weight: 500;
+                color: rgb(110, 110, 110);
+                cursor: pointer;
+            }
+        }
+    }
+}

@@ -3,6 +3,7 @@ const router = express.Router();
 const bookingController = require('../controllers/bookingController');
 
 router.post('/bookings', bookingController.createBooking);
+router.get('/bookings/user/:userId', bookingController.getBookingByUserIdAndFilter);
 router.get('/bookings', bookingController.getAllBookings);
 router.get('/bookings/:id', bookingController.getBookingById);
 router.get('/bookings/by-date', bookingController.getBookingsByDate);

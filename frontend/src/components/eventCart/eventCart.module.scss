@@ -1,0 +1,50 @@
+.container {
+    display:  grid;
+    height: max-content;
+    grid-template-columns: 1fr 2fr;
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 5px;
+    margin: .5em 0;
+    .coverImg{
+        width: 20em;
+        height: 10em;
+        background-size: cover;
+        background-position: center;
+        border-radius: 5px;
+    }
+    .info{
+        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+
+        h4 {
+            margin: 0;
+        }
+        .date{
+            display: flex;
+            align-items: center;
+            color: green;
+            gap:.5em;
+            margin: .5em 0;
+            
+        }
+        .tickets{
+            flex-grow: 1;
+            font-size: 12px;
+            display: flex;
+            flex-direction: row;
+            gap: .2em;
+            align-items: flex-end;
+             
+            .ticket{
+                padding: .2em .5em;
+                background-color: #379777;
+                border-radius: 20px;
+                color: white;
+                height: max-content;
+                font-weight: 500;
+            }
+        }
+    }
+}
