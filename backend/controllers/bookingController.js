@@ -1,4 +1,5 @@
 const db = require("../db");
+const ticketController = require('./ticketController')
 
 const createBooking = async (req, res) => {
   const { userId, eventId, ticketInfo } = req.body;
@@ -112,6 +113,7 @@ const updateStatusBookingPaid = async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(404).send("Booking Not Found");
     }
+    const createTicketResult = await ticketController.createMultipleTickets(result.rows[0].ticketInfo,result.rows[0].eventId);
     // res.status(200).json(result.rows[0]);
     res.redirect(`http://localhost:3000/booking/${result.rows[0].id}/payment-success`);
   } catch (err) {
