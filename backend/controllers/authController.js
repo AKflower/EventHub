@@ -9,7 +9,7 @@ const sendVerificationEmail = async (email, verificationLink) => {
     service: 'Gmail', 
     auth: {
       user: 'eventhub173@gmail.com', 
-      pass: 'ibai twbs skiz olry',  
+      pass: 'jprz kvkb ncra wflf',  
     },
   });
 
