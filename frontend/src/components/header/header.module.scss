@@ -10,5 +10,9 @@
         display: flex;
         justify-content: flex-end;
         margin: 0 2em 0 0;
+        .cart{
+            cursor: pointer;
+        }
     }
+    
 }

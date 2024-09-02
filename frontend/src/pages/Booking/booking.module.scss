@@ -28,4 +28,21 @@
             justify-content: flex-end;
         }
     }
+    .ticket{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        padding: 1em 0;
+        border-bottom: 1px solid silver;
+        gap:.5em;
+        .left{
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        .right{
+            display: flex;
+            align-items: flex-end;
+            flex-direction: column;
+        } 
+    }
 }

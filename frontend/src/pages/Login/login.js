@@ -50,7 +50,7 @@ export default function Login () {
                 <h1 className={styles.header}>Login</h1>
                 <div className={styles.form}>
                     <Input label={'Email'} color='#F4CE14' name={'mail'} value={formData.mail} onChange={handleChange}/>
-                    <Input label={'Password'} color='#F4CE14' name={'password'} value={formData.password} onChange={handleChange}/>
+                    <Input label={'Password'} color='#F4CE14' name={'password'} value={formData.password} onChange={handleChange} type='password'/>
                     <div style={{textAlign:'right',padding:'1em 0'}}><Link to={'/forgot-passwrod'}>Forgot Password</Link></div>
                     
                     <Button name={'Đăng nhập'} color='#F4CE14' onClick={() => handleLogin()}/>

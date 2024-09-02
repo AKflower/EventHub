@@ -123,7 +123,38 @@ const deleteTicket = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+const createMultipleTickets = async (ticketInfo,eventId, bookingId) => {
+  console.log(ticketInfo,eventId);
 
+  if (!ticketInfo || !Array.isArray(ticketInfo)) {
+    return res.status(400).send("Invalid ticket information.");
+  }
+
+  try {
+    const tickets = [];
+    for (const info of ticketInfo) {
+      const { ticketTypeId, quant } = info;
+
+      if (!ticketTypeId || !quant || quant <= 0) {
+        return;
+      }
+
+      for (let i = 0; i < quant; i++) {
+        const result = await db.query(
+          `INSERT INTO tickets ("typeId", "eventId","bookingId") 
+               VALUES ($1, $2,$3) RETURNING *`,
+          [ticketTypeId, eventId, bookingId]
+        );
+        tickets.push(result.rows[0]);
+      }
+    }
+
+    // res.status(201).json(tickets);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
 module.exports = {
   createTicket,
   getAllTickets,
@@ -131,4 +162,5 @@ module.exports = {
   updateTicket,
   softDeleteTicket,
   deleteTicket,
+  createMultipleTickets
 };

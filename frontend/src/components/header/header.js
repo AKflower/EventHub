@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import userService from '../../services/userService'
 import { useUserContext } from '../../context/UserContext'
+import icon from '../../assets/icon/icon'
 
 export default function Header () {
     const navigate = useNavigate()
@@ -16,20 +17,23 @@ export default function Header () {
         setSessionInfo(res);
     }
     useEffect(() => {
-        fetchSession();
+       if (userId) fetchSession();
     },[])
     
     if (path=='/login' || path=='/sign-up') return;
     return (
         <div className={styles.container}>
-            <div>EventHub </div>
+            <div style={{fontFamily:'Londrina Solid',fontSize:'2em',cursor:'pointer'}} onClick={() => navigate('/home')}><span style={{color:'#379777' }}>Event</span><span style={{color:'#000'}}>Hub</span> </div>
             <div className={styles.options}>
            
             {
                 !sessionInfo ?
                 <Button name={'Đăng nhập | Đăng ký'} borderRadius='50px' width={'15em'} color='#379777' onClick={() => navigate('/login')}/>
                 :
-                <div>{sessionInfo.fullName}</div>
+                <div className='d-flex y-center gap-1'>
+                    <div className={styles.cart}><img src={icon.cart} style={{width:'2em'}}/></div>
+                    <div>{sessionInfo.fullName}</div>
+                </div>
             }
             
                 

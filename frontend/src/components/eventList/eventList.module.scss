@@ -1,4 +1,5 @@
 .container{
+    min-width: 20em;
     .header{
         display: flex;
         flex-direction: row;
@@ -64,3 +65,18 @@
 
     }
 }
+@media (max-width: 900px) {
+    .container{
+      .events{
+        grid-template-columns: repeat(2,1fr);
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    .container{
+      .events{
+        grid-template-columns: repeat(1,1fr);
+      }
+    }
+  }

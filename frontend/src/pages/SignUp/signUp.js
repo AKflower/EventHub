@@ -13,8 +13,8 @@ export default function SignUp () {
                 <h1 className={styles.header}>Sign Up</h1>
                 <div className={styles.form}>
                     <Input label={'Email'} color='#F4CE14'/>
-                    <Input label={'Password'} color='#F4CE14'/>
-                    <Input label={'Re-type Password'} color='#F4CE14'/>
+                    <Input label={'Password'} color='#F4CE14' type='password'/>
+                    <Input label={'Re-type Password'} color='#F4CE14' type='password'/>
 
                     
                     <div style={{margin:'2em 0 0 0'}}><Button name={'Đăng ký'} color='#F4CE14'/></div>

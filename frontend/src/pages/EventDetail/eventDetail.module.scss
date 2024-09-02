@@ -40,10 +40,11 @@
 .subInfor{
     margin-top: 2em;
     display: grid;
-    
+   
     grid-template-columns: 2fr 1fr;
     gap: 2em;
     .description{
+        height: max-content;
         background-color: #F5F7F8;
         padding: 1em;
         border-radius: 5px;
@@ -66,6 +67,55 @@
             margin: 0;
             border-bottom: 1px solid silver;
             padding: 0 0 1em 0;
+        }
+        .ticket {
+            font-size: 14px;
+            .left {
+                flex-direction: column;
+                display: flex;
+                justify-content: flex-start;
+                .show{
+                    font-style: italic;
+                    color: #F4CE14;
+                    cursor: pointer;
+                }
+                .des{
+                    font-size: 12px;
+                    color: rgb(81, 81, 81);
+                }
+            }
+            .right{
+                flex-direction: column;
+                display: flex;
+                align-items: flex-end;
+                .quantity{
+                    display: flex;
+                    flex-direction: row;
+                    gap:.5em;
+                    .modQuantity{
+                        background-size:cover;
+                        width:1em;
+                        height:1em;
+                        border-radius:50%;
+                        background-color:#379777;
+                        padding:.2em;
+                        cursor: pointer;
+                    }
+                }
+                .input {
+                    border-radius: 3px;
+                    width: 4em;
+                    padding: .2em .5em;
+                    border: 1px solid silver;
+                }
+            }
+            p{
+                font-weight: 500;
+            } 
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            border-bottom: 1px solid silver;
+            padding: 1em 0 0 0;
         }
     }
 }
