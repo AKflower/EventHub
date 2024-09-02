@@ -1,5 +1,6 @@
 const db = require("../db");
 const ticketController = require('./ticketController')
+const nodemailer = require("nodemailer");
 
 const createBooking = async (req, res) => {
   const { userId, eventId, ticketInfo } = req.body;
@@ -172,6 +173,27 @@ const updateBooking = async (req, res) => {
   }
 };
 
+
+//Test
+const sendMailBooking = async (email,bookingId) => {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail', 
+    auth: {
+      user: 'eventhub173@gmail.com', 
+      pass: 'ibai twbs skiz olry',  
+    },
+  });
+
+  const mailOptions = {
+    from: 'eventhub173@gmail.com',
+    to: email,
+    subject: 'Đặt vé thành công',
+    html: `<p>Thông tin vé: ${bookingId}</p>`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
 const updateStatusBookingPaid = async (req, res) => {
   const { id } = req.params;
   try {
@@ -183,6 +205,7 @@ const updateStatusBookingPaid = async (req, res) => {
       return res.status(404).send("Booking Not Found");
     }
     const createTicketResult = await ticketController.createMultipleTickets(result.rows[0].ticketInfo, result.rows[0].eventId, id);
+    await sendMailBooking(result.rows[0].mail,result.rows[0].id)
     // res.status(200).json(result.rows[0]);
     res.redirect(`http://localhost:3000/booking/${result.rows[0].id}/payment-success`);
   } catch (err) {

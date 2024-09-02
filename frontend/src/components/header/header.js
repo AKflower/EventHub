@@ -31,7 +31,7 @@ export default function Header () {
                 <Button name={'Đăng nhập | Đăng ký'} borderRadius='50px' width={'15em'} color='#379777' onClick={() => navigate('/login')}/>
                 :
                 <div className='d-flex y-center gap-1'>
-                    <div className={styles.cart}><img src={icon.cart} style={{width:'2em'}}/></div>
+                    <div className={styles.cart} onClick={() => navigate('/my-tickets')}><img src={icon.cart} style={{width:'2em'}}/></div>
                     <div>{sessionInfo.fullName}</div>
                 </div>
             }
