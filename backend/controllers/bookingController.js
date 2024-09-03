@@ -175,20 +175,23 @@ const updateBooking = async (req, res) => {
 
 
 //Test
-const sendMailBooking = async (email,bookingId) => {
+const sendMailBooking = async (email,booking) => {
   const transporter = nodemailer.createTransport({
     service: 'Gmail', 
     auth: {
       user: 'eventhub173@gmail.com', 
-      pass: 'ibai twbs skiz olry',  
+      pass: 'jprz kvkb ncra wflf',  
     },
   });
 
-  const mailOptions = {
+  const mailOptions = { //Sửa nội dung
     from: 'eventhub173@gmail.com',
     to: email,
     subject: 'Đặt vé thành công',
-    html: `<p>Thông tin vé: ${bookingId}</p>`,
+    html: `<h1>EventHub xác nhận bạn đã đặt vé thành công</h1>
+          <p>Sự kiện: ${booking.name}</p>
+          <p>Xin chân thành cảm ơn!</p>
+    `,
   };
 
   await transporter.sendMail(mailOptions);
@@ -205,7 +208,7 @@ const updateStatusBookingPaid = async (req, res) => {
       return res.status(404).send("Booking Not Found");
     }
     const createTicketResult = await ticketController.createMultipleTickets(result.rows[0].ticketInfo, result.rows[0].eventId, id);
-    await sendMailBooking(result.rows[0].mail,result.rows[0].id)
+    await sendMailBooking(result.rows[0].mail,result.rows[0])
     // res.status(200).json(result.rows[0]);
     res.redirect(`http://localhost:3000/booking/${result.rows[0].id}/payment-success`);
   } catch (err) {
