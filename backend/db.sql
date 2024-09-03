@@ -40,6 +40,7 @@ CREATE TABLE "ticketTypes" (
     "endTime" TIMESTAMP NOT NULL,
     description TEXT,
     img INTEGER,
+    available INTEGER,
     "isDelete" BOOLEAN DEFAULT FALSE,
     "createdTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     "modifiedTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
@@ -67,6 +68,7 @@ CREATE TABLE events (
     street VARCHAR(255),
     category VARCHAR(100),
     description TEXT,
+    "minPrice" DECIMAL(10, 2),
     "startTime" TIMESTAMP NOT NULL,
     "endTime" TIMESTAMP NOT NULL,
     "accOwner" VARCHAR(255),
@@ -121,3 +123,46 @@ UPDATE
 CREATE TRIGGER set_modified_time_tickets BEFORE
 UPDATE
     ON tickets FOR EACH ROW EXECUTE FUNCTION update_modified_column();
+
+CREATE OR REPLACE FUNCTION update_available()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE "ticketTypes"
+    SET available = total - (
+        SELECT COUNT(*) 
+        FROM tickets 
+        WHERE "typeId" = NEW."typeId" 
+        AND "isDelete" = false
+    )
+    WHERE id = NEW."typeId";
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_available
+AFTER INSERT OR UPDATE OF "isDelete" ON tickets
+FOR EACH ROW
+EXECUTE FUNCTION update_available();
+
+CREATE OR REPLACE FUNCTION update_min_price()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE events
+    SET "minPrice" = (
+        SELECT MIN(price)
+        FROM "ticketTypes"
+        WHERE "eventId" = NEW."eventId"
+    )
+    WHERE id = NEW."eventId";
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_min_price
+AFTER INSERT OR UPDATE ON "ticketTypes"
+FOR EACH ROW
+EXECUTE FUNCTION update_min_price();
+
+
