@@ -66,24 +66,12 @@ const getAllEvents = async (req, res) => {
 };
 
 const getEventById = async (req, res) => {
-  const eventId = req.params.id;
+  const id = req.params.id;
 
   try {
     const result = await db.query(
-      `SELECT 
-          e.*, 
-          COALESCE(MIN(tt.price), 0) AS "minPrice"
-       FROM 
-          events e
-       LEFT JOIN 
-          "ticketTypes" tt 
-       ON 
-          e.id = tt."eventId"
-       WHERE 
-          e.id = $1
-       GROUP BY 
-          e.id`,
-      [eventId]
+      `SELECT * FROM events WHERE id = $1 AND "isDelete" = FALSE`,
+      [id]
     );
 
     if (result.rows.length === 0) {
