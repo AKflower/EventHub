@@ -9,7 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3;
+    z-index: 101;
 }
 
 .modal {
@@ -33,7 +33,7 @@
 
 .modalContent {
     padding: 15px;
-    max-height: 80vh;
+    max-height: 90vh;
     overflow: auto;
     min-width: 500px;
 }

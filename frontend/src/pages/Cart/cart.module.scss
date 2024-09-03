@@ -18,7 +18,23 @@
                 font-weight: 500;
                 color: rgb(110, 110, 110);
                 cursor: pointer;
+                &:hover {
+                    background-color: #F4CE14;
+                    color: #fff;
+                }
             }
+            .tabActive{
+                padding: .5em 1em;
+                background-color: #379777;
+                border-radius: 20px;
+                font-weight: 500;
+                color: #fff;
+                
+                cursor: pointer;
+            }
+        }
+        .ticketContainer{
+            padding: 1em 0;
         }
     }
 }

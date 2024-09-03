@@ -5,6 +5,7 @@ import galleryService from '../../services/galleryService';
 import { parseISO, format } from 'date-fns';
 
 export default function EventItem({ event }) {
+    console.log(event);
     const navigate = useNavigate()
    
     function formatDate(timestamp) {
@@ -29,7 +30,7 @@ export default function EventItem({ event }) {
                     <div className={styles.footer}>
                         <div className={styles.price}>
                             <img src={icon.priceIcon} style={{ width: '1.5em' }} />
-                            <span>từ 100.0000</span>
+                            <span>từ {event.minPrice}</span>
                         </div>
                         <div className={styles.date}>
                             <img src={icon.calendarIcon} style={{ width: '1.5em' }} />
