@@ -1,5 +1,5 @@
 const db = require("../db");
-const ticketController = require('./ticketController')
+const ticketController = require("./ticketController");
 const nodemailer = require("nodemailer");
 
 const createBooking = async (req, res) => {
@@ -46,8 +46,8 @@ const getBookingByUserIdAndFilter = async (req, res) => {
   const { userId } = req.params;
   // Cập nhật filter sau
   const { statusId } = req.query;
-  var query = '';
-  console.log('stauts: ',statusId)
+  var query = "";
+  console.log("stauts: ", statusId);
   if (statusId == 0) {
     query = `SELECT 
     b.*,
@@ -71,9 +71,8 @@ WHERE
 GROUP BY 
     b."id"
 ORDER BY
-    b."eventId";`
-  }
-  else {
+    b."eventId";`;
+  } else {
     query = `SELECT 
     b.*,
     COALESCE(ARRAY_AGG(
@@ -96,12 +95,12 @@ WHERE
 GROUP BY 
     b."id"
     ORDER BY
-    b."eventId";`
+    b."eventId";`;
   }
   try {
     const result = await db.query(
       query,
-      statusId!=0 ? [userId, statusId] : [userId]
+      statusId != 0 ? [userId, statusId] : [userId]
     );
 
     res.status(200).json(result.rows);
@@ -109,7 +108,7 @@ GROUP BY
     console.error(error);
     res.status(500).send("Internal server error");
   }
-}
+};
 
 const getBookingsByDate = async (req, res) => {
   const { date } = req.query;
@@ -173,21 +172,22 @@ const updateBooking = async (req, res) => {
   }
 };
 
-
 //Test
-const sendMailBooking = async (email,booking) => {
+
+const sendMailBooking = async (email, booking) => {
   const transporter = nodemailer.createTransport({
-    service: 'Gmail', 
+    service: "Gmail",
     auth: {
-      user: 'eventhub173@gmail.com', 
-      pass: 'jprz kvkb ncra wflf',  
+      user: "eventhub173@gmail.com",
+      pass: "jprz kvkb ncra wflf",
     },
   });
 
-  const mailOptions = { //Sửa nội dung
-    from: 'eventhub173@gmail.com',
+  const mailOptions = {
+    //Sửa nội dung
+    from: "eventhub173@gmail.com",
     to: email,
-    subject: 'Đặt vé thành công',
+    subject: "Đặt vé thành công",
     html: `<h1>EventHub xác nhận bạn đã đặt vé thành công</h1>
           <p>Sự kiện: ${booking.name}</p>
           <p>Xin chân thành cảm ơn!</p>
@@ -207,10 +207,16 @@ const updateStatusBookingPaid = async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(404).send("Booking Not Found");
     }
-    const createTicketResult = await ticketController.createMultipleTickets(result.rows[0].ticketInfo, result.rows[0].eventId, id);
-    await sendMailBooking(result.rows[0].mail,result.rows[0])
+    const createTicketResult = await ticketController.createMultipleTickets(
+      result.rows[0].ticketInfo,
+      result.rows[0].eventId,
+      id
+    );
+    await sendMailBooking(result.rows[0].mail, result.rows[0]);
     // res.status(200).json(result.rows[0]);
-    res.redirect(`http://localhost:3000/booking/${result.rows[0].id}/payment-success`);
+    res.redirect(
+      `http://localhost:3000/booking/${result.rows[0].id}/payment-success`
+    );
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");
@@ -267,5 +273,5 @@ module.exports = {
   softDeleteBooking,
   deleteBooking,
   updateStatusBookingPaid,
-  getBookingByUserIdAndFilter
+  getBookingByUserIdAndFilter,
 };

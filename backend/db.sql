@@ -20,6 +20,10 @@ CREATE TABLE users (
 CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
     "userId" INTEGER NOT NULL,
+    "eventId" INTEGER NOT NULL,
+    "statusId" INTEGER NOT NULL,
+    "eventId" INTEGER NOT NULL,
+    "ticketInfo" jsonb,
     "ticketIds" INTEGER [] NOT NULL,
     mail VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
@@ -95,6 +99,38 @@ CREATE TABLE roles (
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
+CREATE TABLE "bookingStatus" (
+    id SERIAL PRIMARY KEY,
+    "statusName" VARCHAR(255)
+);
+
+CREATE TABLE "bookingStatus" (
+    id SERIAL PRIMARY KEY,
+    "statusName" VARCHAR(255)
+);
+
+CREATE TABLE "billStatus" (
+    id SERIAL PRIMARY KEY,
+    "statusName" VARCHAR(255)
+);
+
+CREATE TABLE "paymentMethod" (
+    id SERIAL PRIMARY KEY,
+    method VARCHAR(255)
+);
+
+CREATE TABLE bills (
+    id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL,
+    "bookingId" INTEGER NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    "paymentMethodId" VARCHAR(50) NOT NULL,
+    "statusId" VARCHAR(50) NOT NULL,
+    "isDelete" BOOLEAN DEFAULT FALSE,
+    "createdTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "modifiedTime" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
 
 CREATE OR REPLACE FUNCTION update_modified_column()
 RETURNS TRIGGER AS $$
@@ -161,7 +197,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_update_min_price
-AFTER INSERT OR UPDATE ON "ticketTypes"
+AFTER INSERT OR UPDATE OR DELETE ON "ticketTypes"
 FOR EACH ROW
 EXECUTE FUNCTION update_min_price();
 
