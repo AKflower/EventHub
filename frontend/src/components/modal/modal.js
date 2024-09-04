@@ -14,9 +14,9 @@ export default function Modal({ title, children, onSubmit, onClose, submitButton
                     {children}
                 </div>
                 <div className={styles.modalFooter}>
-                    <button className={styles.submitButton} onClick={onSubmit}>
+                    {onSubmit && <button className={styles.submitButton} onClick={onSubmit}>
                         {submitButtonLabel || 'Lưu'}
-                    </button>
+                    </button>}
                     <button className={styles.cancelButton} onClick={onClose}>Hủy</button>
                 </div>
             </div>

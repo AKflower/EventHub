@@ -15,16 +15,17 @@ export default function Cart () {
             name: 'Tất cả'
         },
         {
-            id: 1,
+            id: 3,
             name: 'Thành công'
         },
         {
-            id: 2,
+            id: 4,
             name: 'Đã hủy'
         },
     ]
     const [bookings,setBookings] = useState([])
     const [events,setEvents] = useState()
+    const [tab,setTab] = useState(0)
     const eventGrouping = async (data) => {
         var eventArr = [];
         var prevBooking = null;
@@ -42,10 +43,15 @@ export default function Cart () {
             }
         })
         console.log(eventArr);
-        setEvents(eventArr)
+        var newEventArr = [...eventArr];
+        newEventArr.forEach((event) => {
+            event = {...sortBooking(event)};
+        })
+        console.log(newEventArr);
+        setEvents(newEventArr)
     }
-    const fetchBooking = async () => {
-        const res = await  bookingService.getBookingByUserIdAndFilter(sessionInfo.id,0)
+    const fetchBooking = async (status) => {
+        const res = await  bookingService.getBookingByUserIdAndFilter(sessionInfo.id,status)
         var data = [...res];
         await eventGrouping(data);
         
@@ -53,8 +59,12 @@ export default function Cart () {
     }
     useEffect(() => {
         if (!sessionInfo) return;
-        fetchBooking();
-    }, [sessionInfo])
+        fetchBooking(tab);
+    }, [sessionInfo,tab])
+    const sortBooking = (event) => {
+        const newEvent = [...event.bookingInfo.sort((a,b) => b.id - a.id)];
+        return newEvent;
+    }
     if (!events) return;
     return (
         <div className='main'>
@@ -64,7 +74,7 @@ export default function Cart () {
                     <h2 className={styles.header}>Vé của bạn</h2>
                     <div className={styles.tabContainer}>
                         {status.map((item) => (
-                            <div className={styles.tab} key={item.id}>{item.name}</div>
+                            <div className={tab==item.id ? styles.tabActive : styles.tab} key={item.id} onClick={()=>setTab(item.id)}>{item.name}</div>
                         ))}
                     </div>
                     <div className={styles.ticketContainer}>
