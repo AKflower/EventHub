@@ -1,5 +1,5 @@
 const db = require("../db");
-const ticketController = require('./ticketController')
+const ticketController = require("./ticketController");
 const nodemailer = require("nodemailer");
 
 const createBooking = async (req, res) => {
@@ -46,8 +46,8 @@ const getBookingByUserIdAndFilter = async (req, res) => {
   const { userId } = req.params;
   // Cập nhật filter sau
   const { statusId } = req.query;
-  var query = '';
-  console.log('stauts: ',statusId)
+  var query = "";
+  console.log("stauts: ", statusId);
   if (statusId == 0) {
     query = `SELECT 
     b.*,
@@ -71,9 +71,8 @@ WHERE
 GROUP BY 
     b."id"
 ORDER BY
-    b."eventId";`
-  }
-  else {
+    b."eventId";`;
+  } else {
     query = `SELECT 
     b.*,
     COALESCE(ARRAY_AGG(
@@ -96,12 +95,12 @@ WHERE
 GROUP BY 
     b."id"
     ORDER BY
-    b."eventId";`
+    b."eventId";`;
   }
   try {
     const result = await db.query(
       query,
-      statusId!=0 ? [userId, statusId] : [userId]
+      statusId != 0 ? [userId, statusId] : [userId]
     );
 
     res.status(200).json(result.rows);
@@ -109,7 +108,7 @@ GROUP BY
     console.error(error);
     res.status(500).send("Internal server error");
   }
-}
+};
 
 const getBookingsByDate = async (req, res) => {
   const { date } = req.query;
@@ -173,21 +172,20 @@ const updateBooking = async (req, res) => {
   }
 };
 
-
 //Test
-const sendMailBooking = async (email,bookingId) => {
+const sendMailBooking = async (email, bookingId) => {
   const transporter = nodemailer.createTransport({
-    service: 'Gmail', 
+    service: "Gmail",
     auth: {
-      user: 'eventhub173@gmail.com', 
-      pass: 'ibai twbs skiz olry',  
+      user: "eventhub173@gmail.com",
+      pass: "ibai twbs skiz olry",
     },
   });
 
   const mailOptions = {
-    from: 'eventhub173@gmail.com',
+    from: "eventhub173@gmail.com",
     to: email,
-    subject: 'Đặt vé thành công',
+    subject: "Đặt vé thành công",
     html: `<p>Thông tin vé: ${bookingId}</p>`,
   };
 
@@ -204,10 +202,16 @@ const updateStatusBookingPaid = async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(404).send("Booking Not Found");
     }
-    const createTicketResult = await ticketController.createMultipleTickets(result.rows[0].ticketInfo, result.rows[0].eventId, id);
-    await sendMailBooking(result.rows[0].mail,result.rows[0].id)
+    const createTicketResult = await ticketController.createMultipleTickets(
+      result.rows[0].ticketInfo,
+      result.rows[0].eventId,
+      id
+    );
+    await sendMailBooking(result.rows[0].mail, result.rows[0].id);
     // res.status(200).json(result.rows[0]);
-    res.redirect(`http://localhost:3000/booking/${result.rows[0].id}/payment-success`);
+    res.redirect(
+      `http://localhost:3000/booking/${result.rows[0].id}/payment-success`
+    );
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");
@@ -264,5 +268,5 @@ module.exports = {
   softDeleteBooking,
   deleteBooking,
   updateStatusBookingPaid,
-  getBookingByUserIdAndFilter
+  getBookingByUserIdAndFilter,
 };

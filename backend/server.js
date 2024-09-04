@@ -13,6 +13,7 @@ const ticketRoutes = require("./routes/ticketRoutes");
 const authRoutes = require("./routes/authRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const galleryRoutes = require("./routes/galleryRoutes");
+const billRoutes = require('./routes/billRoutes');
 
 cron.schedule("* * * * *", async () => {
   try {
@@ -39,6 +40,7 @@ app.use("/api", ticketRoutes);
 app.use("/api", authRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", galleryRoutes);
+app.use('/api', billRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
