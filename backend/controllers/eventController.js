@@ -117,6 +117,51 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
   }
 };
 
+const getEventsByDate = async (req, res) => {
+  const { date } = req.query;
+  try {
+    const queryText = `SELECT * FROM events WHERE "startTime"::date = $1 AND "isDelete" = false`;
+    const result = await db.query(queryText, [date]);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching events by date:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getEventCountByCity = async (req, res) => {
+  try {
+    const queryText = `
+      SELECT city, COUNT(*) as "eventCount"
+      FROM events
+      WHERE "isDelete" = false
+      GROUP BY city
+    `;
+    const result = await db.query(queryText);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching event count by city:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getEventCountByCategory = async (req, res) => {
+  try {
+    const queryText = `
+      SELECT category, COUNT(*) as "eventCount"
+      FROM events
+      WHERE "isDelete" = false
+      GROUP BY category
+    `;
+    const result = await db.query(queryText);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching event count by category:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
 const searchEventsByName = async (req, res) => {
   const { name } = req.query;
 
@@ -245,6 +290,9 @@ module.exports = {
   getEventById,
   getEventsByCategoryAndIsFree,
   searchEventsByName,
+  getEventsByDate,
+  getEventCountByCity,
+  getEventCountByCategory,
   updateEvent,
   softDeleteEvent,
   deleteEvent,

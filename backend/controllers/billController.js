@@ -24,6 +24,25 @@ const getBillById = async (req, res) => {
   }
 };
 
+// API: Tổng doanh thu theo sự kiện
+const getTotalRevenueByEvent = async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT e.name AS "eventName", SUM(b.total) AS "totalRevenue"
+      FROM bills b
+      JOIN bookings bk ON b."bookingId" = bk.id
+      JOIN events e ON bk."eventId" = e.id
+      WHERE b."isDelete" = false
+      GROUP BY e.name
+      ORDER BY "totalRevenue" DESC;
+    `);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Error fetching total revenue by event:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 const createBill = async (req, res) => {
   const { userId, bookingId, total, paymentMethodId, statusId } = req.body;
   try {
@@ -99,6 +118,7 @@ const deleteBill = async (req, res) => {
 module.exports = {
   getAllBills,
   getBillById,
+  getTotalRevenueByEvent,
   createBill,
   updateBill,
   softDeleteBill,

@@ -63,6 +63,43 @@ const getTicketById = async (req, res) => {
   }
 };
 
+// API: Tổng số vé đã bán theo loại vé
+const getTotalTicketsSoldPerType = async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT tt.name AS "ticketType", ttt.name AS "eventName", COUNT(t.id) AS "totalTicketsSold"
+      FROM tickets t
+      JOIN "ticketTypes" tt ON t."typeId" = tt.id
+      JOIN events ttt ON t."eventId" = ttt.id
+      WHERE t."isDelete" = false
+      GROUP BY tt.name, ttt.name
+      ORDER BY "totalTicketsSold" DESC;
+    `);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching total tickets sold per type:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getTicketsSoldByDay = async (req, res) => {
+  try {
+    const queryText = `
+      SELECT DATE(t."createdTime") as "saleDate", COUNT(t.id) as "ticketCount"
+      FROM tickets t
+      WHERE t."isDelete" = false
+      GROUP BY "saleDate"
+      ORDER BY "saleDate" DESC
+    `;
+    const result = await db.query(queryText);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching tickets sold by day:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
 const updateTicket = async (req, res) => {
   const { id } = req.params;
   const { typeId, eventId } = req.body;
@@ -123,8 +160,8 @@ const deleteTicket = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-const createMultipleTickets = async (ticketInfo,eventId, bookingId) => {
-  console.log(ticketInfo,eventId);
+const createMultipleTickets = async (ticketInfo, eventId, bookingId) => {
+  console.log(ticketInfo, eventId);
 
   if (!ticketInfo || !Array.isArray(ticketInfo)) {
     return res.status(400).send("Invalid ticket information.");
@@ -159,8 +196,10 @@ module.exports = {
   createTicket,
   getAllTickets,
   getTicketById,
+  getTotalTicketsSoldPerType,
+  getTicketsSoldByDay,
   updateTicket,
   softDeleteTicket,
   deleteTicket,
-  createMultipleTickets
+  createMultipleTickets,
 };
