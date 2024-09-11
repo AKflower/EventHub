@@ -153,6 +153,43 @@ const getTotalBookingsByMonth = async (req, res) => {
   }
 };
 
+// API: Tổng số booking theo từng sự kiện
+const getTotalBookingsPerEvent = async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT e.name AS "eventName", COUNT(b.id) AS "totalBookings"
+      FROM bookings b
+      JOIN events e ON b."eventId" = e.id
+      WHERE b."isDelete" = false
+      GROUP BY e.name
+      ORDER BY "totalBookings" DESC;
+    `);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Error fetching total bookings per event:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const getTopUsersByBookings = async (req, res) => {
+  try {
+    const queryText = `
+      SELECT u."fullName", COUNT(b.id) as "totalBookings"
+      FROM users u
+      JOIN bookings b ON u.id = b."userId"
+      WHERE b."isDelete" = false
+      GROUP BY u."fullName"
+      ORDER BY "totalBookings" DESC
+      LIMIT 10;
+    `;
+    const result = await db.query(queryText);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching top users by bookings:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 const updateBooking = async (req, res) => {
   const { id } = req.params;
   const { userId, ticketIds, mail, phone } = req.body;
@@ -269,6 +306,8 @@ module.exports = {
   getBookingById,
   getBookingsByDate,
   getTotalBookingsByMonth,
+  getTotalBookingsPerEvent,
+  getTopUsersByBookings,
   updateBooking,
   softDeleteBooking,
   deleteBooking,
