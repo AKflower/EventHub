@@ -104,7 +104,7 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
       SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id  
-      WHERE e."isDelete" = false`;
+      WHERE e."isDelete" = false AND e."statusId" != 3`;
     const values = [];
 
     if (categories !== undefined) {
