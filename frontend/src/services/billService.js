@@ -72,7 +72,7 @@ const getTotalRevenueByEvent = async () => {
   }
 };
 
-export {
+export default billService = {
   getAllBills,
   getBillById,
   createBill,

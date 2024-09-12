@@ -1,0 +1,48 @@
+.container{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    .sidebar{
+        position: fixed;
+        top: 20vh;
+        background-color: white;
+        padding: 1em;
+        border-radius: 5px;
+        min-width: 18em;
+        h3 {
+            padding: 0 0 1em 0;
+            text-align: center;
+            border-bottom: 1px solid silver;
+            margin: 0 0 1em 0;
+        }
+        .tab{
+            display: flex;
+            gap: 1em;
+            align-items: center;
+            padding: 1em 1em 1em 2em;
+            cursor: pointer;
+            border-radius: 10px;
+            &:hover {
+                background-color: #379777;
+               
+                color: white;
+            }
+
+        }
+        .tabActive{
+            display: flex;
+            gap: 1em;
+            align-items: center;
+            padding: 1em 1em 1em 2em;
+            cursor: pointer;
+            border-radius: 10px;
+            color: white;
+            background-color: #379777;
+           
+            
+        }
+    }
+    .right{
+        padding: 3em 1em 1em 1em;
+        
+    }
+}

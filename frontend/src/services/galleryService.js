@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:3001/api/galleries'; // Cập nhật URL API n
 const galleryService = {
   addImage: async (formData) => {
     try {
-      const response = await axios.post(`${API_URL}/add`, formData, {
+      const response = await axios.post(`${API_URL}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

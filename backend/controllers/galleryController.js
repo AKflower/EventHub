@@ -6,8 +6,8 @@ const upload = multer({ storage: storage });
 
 const addImage = async (req, res) => {
   const { name } = req.body;
-  const data = req.file.buffer; 
-
+  const data = req.file ? req.file.buffer : null;
+  console.log(data,name);
   try {
     const result = await db.query(
       `INSERT INTO Galleries (name, data) VALUES ($1, $2) RETURNING *`,

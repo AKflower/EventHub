@@ -13,6 +13,7 @@ import Booking from './pages/Booking/booking';
 import Payment from './pages/Payment/payment';
 import Cart from './pages/Cart/cart';
 import Profile from './pages/Profile/profile';
+import Organizer from './pages/Organizer/organizer';
 import 'react-toastify/dist/ReactToastify.css'; 
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
         <Route path='/booking/:bookingId/payment-success' element={<Payment status={1}/>}/>
         <Route path='/my-tickets' element={<Cart />}/>
         <Route path='/profile' element={<Profile />}/>
+        <Route path='/organizer' element={<Organizer />}/>
+
 
 
 
