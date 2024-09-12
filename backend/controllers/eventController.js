@@ -130,6 +130,30 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
   }
 };
 
+const getEventsByCreatedById = async (req, res) => {
+  const { createdById } = req.params;
+
+  try {
+    const result = await db.query(
+      `SELECT e.*, s.name AS "statusName"
+       FROM events e
+       JOIN status s ON e."statusId" = s.id
+       WHERE e."createdById" = $1 AND e."isDelete" = FALSE
+       ORDER BY e."createdTime" DESC`,
+      [createdById]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('No events found for this user');
+    }
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Error fetching events by createdById:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 const getEventsByDate = async (req, res) => {
   const { date } = req.query;
   try {
@@ -306,6 +330,7 @@ module.exports = {
   getEventsByCategoryAndIsFree,
   searchEventsByName,
   getEventsByDate,
+  getEventsByCreatedById,
   getEventCountByCity,
   getEventCountByCategory,
   updateEvent,

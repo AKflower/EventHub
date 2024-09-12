@@ -10,6 +10,7 @@ router.get('/events/filter', eventController.getEventsByCategoryAndIsFree);
 router.get('/events/by-date', eventController.getEventsByDate);
 router.get('/events/count-by-city', eventController.getEventCountByCity);
 router.get('/events/count-by-category', eventController.getEventCountByCategory);
+router.get('/events/created-by/:createdById', eventController.getEventsByCreatedById);
 router.get('/events/:id', eventController.getEventById);
 router.get('/search-by-name', eventController.searchEventsByName);
 router.put('/events/:id', eventController.updateEvent);
