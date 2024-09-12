@@ -1,5 +1,5 @@
-import styles from './formCreate.module.scss'
-import { useRef, useState } from 'react';
+import styles from './formUpdate.module.scss'
+import { useEffect, useRef, useState } from 'react';
 import Input from '../input/input';
 import Select from '../select/select';
 import Button from '../button/button';
@@ -7,25 +7,13 @@ import eventService from '../../services/eventService';
 import galleryService from '../../services/galleryService'
 import { toast } from 'react-toastify';
 
-export default function FormCreate() {
+export default function FormUpdate({event,save,onFetch}) {
+    console.log(event);
     const [preview, setPreview] = useState('');
     const [file, setFile] = useState(null);
     const [isSaving,setIsSaving] = useState(false)
     const [formData, setFormData] = useState({
-        name: '',
-        venueName: '',
-        district: '',
-        ward: '',
-        city: '',
-        category: '',
-        description: '',
-        accOwner: '',
-        accNumber: '',
-        bank: '',
-        branch: '',
-        street: '',
-        startTime: '',
-        endTime: ''
+       ...event
     })
     function checkEmptyFields(data) {
         for (const key in data) {
@@ -45,12 +33,18 @@ export default function FormCreate() {
                 [name]: value
             }
         ))
+        console.log(formData);
     }
+    useEffect(() => {
+        if (save)
+        handleSubmit()
+    }, [save])
     const fileInputRef = useRef(null);
     const handleImageUploadClick = () => {
         fileInputRef.current.click(); // Kích hoạt click trên input file
     };
     const handleSubmit = async () => {
+        console.log(formData);
         if (isSaving) return;
         setIsSaving(true)
         if (checkEmptyFields()) {
@@ -58,15 +52,19 @@ export default function FormCreate() {
             setIsSaving(false)
             return;
         }
-        if (!preview) {
-            toast.warning('Vui lòng upload ảnh!') ;
-            setIsSaving(false)
-            return;
-        };
-        const res = await galleryService.addImage({name: formData.name,image:file})
-        console.log(res.id);
-        const event = await eventService.createEvent({...formData, coverImg: res.id});
-        toast.success('Tạo thành công!');
+        
+        if (preview)  {
+            const res = await galleryService.addImage({name: formData.name,image:file})
+            const event = await eventService.updateEvent(formData.id,{...formData, coverImg: res.id});
+            toast.success('Cập nhật thành công!')
+            onFetch()
+        }
+        else {
+            const event = await eventService.updateEvent(formData.id,{...formData});
+            toast.success('Cập nhật thành công!')
+            onFetch()
+        }
+       
         setIsSaving(false)
         
     }
@@ -85,14 +83,13 @@ export default function FormCreate() {
     };
     return (
         <div className={styles.form}>
-            <h3>Tạo sự kiện</h3>
             <div className={styles.formGroup}>
                 <h4>Upload ảnh</h4>
                 <div
                     className={styles.imgUpload}
-                    style={preview ? { backgroundImage: `url(${preview})` } : { display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ backgroundImage: `url(${preview ? preview : galleryService.getLinkImage(formData.coverImg) })` }}
                     onClick={handleImageUploadClick}>
-                    {!preview && 'Thêm ảnh bìa'}
+                    
                 </div>
                 <input
                     type="file"
@@ -162,9 +159,7 @@ export default function FormCreate() {
                 <Input label={'Chi nhánh'} name={'branch'} value={formData.branch} onChange={handleChange} />
 
             </div>
-            <div className={styles.formGroup}>
-                <Button name={'Tạo sự kiện'} onClick={() => handleSubmit()} color={isSaving ? 'silver' : ''}/>
-            </div>
+           
         </div>
     )
 }

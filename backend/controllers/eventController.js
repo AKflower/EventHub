@@ -226,7 +226,7 @@ const updateEvent = async (req, res) => {
       `UPDATE events SET 
             logo = $1, "coverImg" = $2, name = $3, "venueName" = $4, city = $5, district = $6, ward = $7, street = $8, 
             category = $9, description = $10, "startTime" = $11, "endTime" = $12, "accOwner" = $13, "accNumber" = $14, 
-            bank = $15, branch = $16, "isFree" = $17, modifiedtime = CURRENT_TIMESTAMP 
+            bank = $15, branch = $16, "isFree" = $17, "modifiedTime" = CURRENT_TIMESTAMP 
             WHERE id = $18 RETURNING *`,
       [
         logo,

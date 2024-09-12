@@ -20,6 +20,19 @@ const formatService = {
         if (timeStamp=='' || !timeStamp) return timeStamp;
         return  timeStamp.split('T')[0];
         
-    }
+    },
+    formatDate: (dateString) => {
+        const date = new Date(dateString);
+      
+        // Lấy giờ, phút, ngày, tháng, và năm
+        const hours = String(date.getUTCHours()).padStart(2, '0'); // Lấy giờ và đảm bảo 2 chữ số
+        const minutes = String(date.getUTCMinutes()).padStart(2, '0'); // Lấy phút và đảm bảo 2 chữ số
+        const day = String(date.getUTCDate()).padStart(2, '0'); // Lấy ngày và đảm bảo 2 chữ số
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Lấy tháng và đảm bảo 2 chữ số
+        const year = date.getUTCFullYear(); // Lấy năm
+      
+        // Định dạng theo HH:mm DDMMYYYY
+        return `${hours}:${minutes} ${day}${month}${year}`;
+      }
 }
 export default formatService;

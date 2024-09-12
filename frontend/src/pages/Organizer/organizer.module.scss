@@ -1,6 +1,9 @@
 .container{
     display: grid;
     grid-template-columns: 1fr 3fr;
+    .left {
+        min-width: 20em;
+    }
     .sidebar{
         position: fixed;
         top: 20vh;

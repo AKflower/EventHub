@@ -49,3 +49,35 @@ code {
 .gap-3 {
   gap:3em;
 }
+
+.table{
+  width: 100%;
+  border-spacing: 0;
+  border-collapse:collapse;
+  font-size: 12px;
+  
+  
+}
+.table thead {
+  color:  #F5F5F5;
+
+}
+.table thead tr {
+  background-color: #49cfcb;
+
+} 
+.table tbody tr {
+  background-color: #F5F5F5;
+  cursor: pointer;
+
+}
+.table tbody tr:hover {
+  background-color: #a7e5e3;
+}
+.table tbody tr td {
+  text-align: center;
+}
+.table td,
+.table th {
+  padding: 1em;
+}
