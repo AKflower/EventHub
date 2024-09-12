@@ -1,6 +1,39 @@
 .container {
     display: grid;
     grid-template-columns: 1fr 3fr;
+    .sidebar{
+        padding: 2em 0;
+        color: white;
+        .info {
+            font-weight: 600;
+            
+        }
+        .statistic{
+            font-size: 12px;
+        }
+        .options{
+            margin: 2em 0;
+            font-size: 13px;
+            
+            .option {
+                padding: 1em 0;
+                display: flex;
+                align-items: center;
+                column-gap: .5em;
+                cursor: pointer;
+            
+            }
+            .optionActive{
+                padding: 1em 0;
+                display: flex;
+                align-items: center;
+                column-gap: .5em;
+                cursor: pointer;
+                color: #379777;
+                font-weight: 600;
+            }
+        }
+    }
     .cart {
         .header {
             color: white;

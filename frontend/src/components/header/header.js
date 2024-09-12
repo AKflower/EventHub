@@ -21,7 +21,7 @@ export default function Header () {
        if (userId) fetchSession();
     },[])
     
-    if (path=='/login' || path=='/sign-up') return;
+    if (path=='/login' || path=='/sign-up' || path=='/profile') return;
     return (
         <div className={styles.container}>
             <div style={{fontFamily:'Londrina Solid',fontSize:'2em',cursor:'pointer'}} onClick={() => navigate('/home')}><span style={{color:'#379777' }}>Event</span><span style={{color:'#000'}}>Hub</span> </div>
@@ -33,7 +33,7 @@ export default function Header () {
                 :
                 <div className='d-flex y-center gap-1'>
                     <div className={styles.cart} onClick={() => navigate('/my-tickets')}><img src={icon.cart} style={{width:'2em'}}/></div>
-                    <div>{sessionInfo.fullName}</div>
+                    <div style={{cursor:'pointer'}} onClick={() => navigate('/profile')}>{sessionInfo.fullName}</div>
                 </div>
             }
             

@@ -4,9 +4,14 @@ import { useEffect, useState } from 'react'
 import { useUserContext } from '../../context/UserContext'
 import eventService from '../../services/eventService'
 import EventCart from '../../components/eventCart/eventCart'
+import Ptitle from '../../components/ptitle/ptitle'
+import PersonIcon from '@mui/icons-material/Person';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { useNavigate } from 'react-router-dom'
 
 export default function Cart () {
-
+    const navigate = useNavigate()
     const { sessionInfo } = useUserContext()
 
     const status = [
@@ -69,7 +74,26 @@ export default function Cart () {
     return (
         <div className='main'>
             <div className={styles.container}>
-                <div className={styles.sidebar}></div>
+                <div className={styles.sidebar}>
+                    <div className={styles.info}>
+                        {sessionInfo.fullName}
+                    </div>
+                    <div className={styles.statistic}>
+                        <Ptitle title={'Tổng vé đã đặt'}/>
+                        <Ptitle title={'Tổng vé đã hủy'}/>
+                    </div>
+                    <div className={styles.options}>
+                        <div className={styles.option} onClick={() => navigate('/profile')}>
+                            <PersonIcon /> Thông tin cá nhân
+                        </div>
+                        <div className={styles.optionActive} onClick={() => navigate('/my-tickers')}>
+                            <ConfirmationNumberIcon /> Vé của bạn
+                        </div>
+                        <div className={styles.option}>
+                            <CalendarMonthIcon /> Quản lý sự kiện
+                        </div>
+                    </div>
+                </div>
                 <div className={styles.cart}>
                     <h2 className={styles.header}>Vé của bạn</h2>
                     <div className={styles.tabContainer}>

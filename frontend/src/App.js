@@ -12,6 +12,8 @@ import { UserProvider, useUserContext} from './context/UserContext'
 import Booking from './pages/Booking/booking';
 import Payment from './pages/Payment/payment';
 import Cart from './pages/Cart/cart';
+import Profile from './pages/Profile/profile';
+import 'react-toastify/dist/ReactToastify.css'; 
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path='/booking/:bookingId/payment' element={<Payment />}/>
         <Route path='/booking/:bookingId/payment-success' element={<Payment status={1}/>}/>
         <Route path='/my-tickets' element={<Cart />}/>
+        <Route path='/profile' element={<Profile />}/>
+
 
 
       </Routes>

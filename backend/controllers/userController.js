@@ -37,8 +37,20 @@ const getAllUsers = async (req, res) => {
 
 const changePassword = async (req, res) => {
   const { id } = req.params;
-  const { oldPassword, newPassword } = req.body;
+  const { mail,oldPassword, newPassword } = req.body;
+  const result = await db.query("SELECT * FROM users WHERE mail = $1", [
+      mail,
+    ]);
+    const user = result.rows[0];
 
+    if (!user) {
+      return res.status(400).json({ error: "Invalid mail or password" });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(400).json({ error: "Invalid mail or password" });
+    }
   try {
     const userResult = await db.query(
       `SELECT password FROM users WHERE id = $1 AND "isDelete" = FALSE`,
@@ -90,12 +102,12 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { password, fullName, phone, birth, gender, mail } = req.body;
+  const { fullName, phone, birth, gender, mail } = req.body;
 
   try {
     const result = await db.query(
-      `UPDATE users SET password = $1, "fullName" = $2, phone = $3, birth = $4, gender = $5, mail = $6 WHERE id = $7 RETURNING *`,
-      [password, fullName, phone, birth, gender, mail, id]
+      `UPDATE users SET  "fullName" = $1, phone = $2, birth = $3, gender = $4, mail = $5 WHERE id = $6 RETURNING *`,
+      [fullName, phone, birth, gender, mail, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).send("User Not Found");
