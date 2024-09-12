@@ -57,10 +57,16 @@ const createEvent = async (req, res) => {
 
 const getAllEvents = async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM events");
+    const queryText = `
+      SELECT e.*, s."statusName"
+      FROM events e
+      JOIN "eventStatus" s ON e."statusId" = s.id
+      WHERE e."isDelete" = false;
+    `;
+    const result = await db.query(queryText);
     res.status(200).json(result.rows);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching events:", err);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -70,7 +76,10 @@ const getEventById = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT * FROM events WHERE id = $1 AND "isDelete" = FALSE`,
+      `SELECT e.*, s."statusName"
+      FROM events e
+      JOIN "eventStatus" s ON e."statusId" = s.id 
+      WHERE e.id = $1 AND e."isDelete" = FALSE`,
       [id]
     );
 
@@ -91,21 +100,25 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
   const categoryList = Array.isArray(categories) ? categories : [categories];
 
   try {
-    let queryText = 'SELECT * FROM events WHERE "isDelete" = false';
+    let queryText = `
+      SELECT e.*, s."statusName"
+      FROM events e
+      JOIN "eventStatus" s ON e."statusId" = s.id  
+      WHERE e."isDelete" = false`;
     const values = [];
 
     if (categories !== undefined) {
-      queryText += " AND category = ANY($1::text[])";
+      queryText += " AND e.category = ANY($1::text[])";
       values.push(categoryList);
     }
 
     if (isFree !== undefined) {
-      queryText += ` AND "isFree" = $${values.length + 1}`;
+      queryText += ` AND "e.isFree" = $${values.length + 1}`;
       values.push(isFree);
     }
 
     if (city !== undefined) {
-      queryText += ` AND city = $${values.length + 1}`;
+      queryText += ` AND e.city = $${values.length + 1}`;
       values.push(city);
     }
 
@@ -120,7 +133,10 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
 const getEventsByDate = async (req, res) => {
   const { date } = req.query;
   try {
-    const queryText = `SELECT * FROM events WHERE "startTime"::date = $1 AND "isDelete" = false`;
+    const queryText = `SELECT e.*, s."statusName"
+      FROM events e
+      JOIN "eventStatus" s ON e."statusId" = s.id 
+      WHERE e."startTime"::date = $1 AND e."isDelete" = false`;
     const result = await db.query(queryText, [date]);
     res.status(200).json(result.rows);
   } catch (err) {
@@ -160,7 +176,6 @@ const getEventCountByCategory = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 const searchEventsByName = async (req, res) => {
   const { name } = req.query;

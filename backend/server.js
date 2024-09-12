@@ -20,7 +20,7 @@ cron.schedule("* * * * *", async () => {
     const deleteQuery = `
           DELETE FROM bookings 
           WHERE "statusId" IN (1, 2) 
-          AND "createdTime" < NOW() - INTERVAL '15 minutes';
+          AND "createdTime" < NOW() - INTERVAL '1 minutes';
       `;
     await db.query(deleteQuery);
     console.log("Cron job executed: Outdated bookings deleted");
@@ -28,6 +28,40 @@ cron.schedule("* * * * *", async () => {
     console.error("Error deleting outdated bookings:", error);
   }
 });
+
+const updateEventStatus = async () => {
+  try {
+    const queryText = `
+      SELECT id, "startTime", "endTime", "statusId"
+      FROM events
+      WHERE "isDelete" = false AND "statusId" IN (1, 2);
+    `;
+    const result = await db.query(queryText);
+    const now = moment();
+
+    for (const event of result.rows) {
+      let newStatusId = event.statusId;
+
+      if (now.isBetween(event.startTime, event.endTime)) {
+        newStatusId = 2;  
+      } else if (now.isAfter(event.endTime)) {
+        newStatusId = 3;  
+      }
+
+      if (newStatusId !== event.statusId) {
+        await db.query(`
+          UPDATE events
+          SET "statusId" = $1
+          WHERE id = $2;
+        `, [newStatusId, event.id]);
+      }
+    }
+  } catch (err) {
+    console.error("Error updating event status:", err);
+  }
+};
+
+cron.schedule('*/1 * * * *', updateEventStatus);
 
 app.use(cors());
 
