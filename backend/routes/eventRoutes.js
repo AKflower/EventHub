@@ -13,6 +13,7 @@ router.get('/events/count-by-category', eventController.getEventCountByCategory)
 router.get('/events/created-by/:createdById', eventController.getEventsByCreatedById);
 router.get('/events/:id', eventController.getEventById);
 router.get('/search-by-name', eventController.searchEventsByName);
+router.patch('/events/:id/active', eventController.patchEventIsActive);
 router.put('/events/:id', eventController.updateEvent);
 router.put('/events/:id/soft-delete', eventController.softDeleteEvent);
 router.delete('/events/:id', eventController.deleteEvent);
