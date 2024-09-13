@@ -10,8 +10,15 @@ import formatService from '../../services/formatService';
 import Modal from '../modal/modal';
 import FormCreate from '../formCreate/formCreate';
 import FormUpdate from '../FormUpdate/formUpdate';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ticketTypeService from '../../services/ticketTypeService';
+import EventItem from '../eventItem/eventItem';
+import Ptitle from '../ptitle/ptitle';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function ManageEvent() {
+    const userId = localStorage.getItem('userId')
     const [save,setSave] = useState(false);
     const [preview, setPreview] = useState('');
     const [file, setFile] = useState(null);
@@ -19,6 +26,10 @@ export default function ManageEvent() {
     const [events,setEvents] = useState([])
     const [showModal,setShowModal] = useState(false)
     const [eventSelected,setEventSelected] = useState()
+    const [isManageTicket,setIsManageTicket] = useState(false)
+    const [ticketTypes,setTicketTypes] = useState();
+    const [showTicketModal,setShowTicketModal] = useState(false)
+    const [showNewTicketModal,setShowNewTicketModal] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         venueName: '',
@@ -78,6 +89,59 @@ export default function ManageEvent() {
         setIsSaving(false)
         
     }
+    const handleBack = async () => {
+        fetchEvents()
+        setTicketTypes();
+        setEventSelected();
+        setIsManageTicket(false);
+    }
+    const handleManageTicket = async (e,event) => {
+        e.stopPropagation();
+        const res = await ticketTypeService.getTicketTypesByEventId(event.id);
+        setTicketTypes(res);
+        setEventSelected(event);
+        setIsManageTicket(true);
+
+    }
+
+    const handleNewTicket = async () => {
+        setShowNewTicketModal(true);
+        setFormData({
+            
+            name: "",
+            description: "",
+            eventId: "",
+            price: 0,   
+            eventId: eventSelected.id,
+            total: 1,
+            minBuy: 1,
+            maxBuy: 4,
+            startTime: eventSelected.startTime,
+            endTime: eventSelected.endTime
+          })
+    }
+    const handleNewTicketSubmit  = async () => {
+        const ticketType = await ticketTypeService.createTicketType(formData)
+        const res = await ticketTypeService.getTicketTypesByEventId(eventSelected.id);
+        setTicketTypes(res);
+        setShowNewTicketModal(false);
+        setFormData();
+        toast.success('Cập nhật thành công')
+
+    }
+    const handleEditTicket = async (ticket) => {
+        setShowTicketModal(true);
+        setFormData(ticket)
+    }
+    const handleEditTicketSubmit  = async () => {
+        const ticketType = await ticketTypeService.updateTicketType(formData.id,formData)
+        const res = await ticketTypeService.getTicketTypesByEventId(eventSelected.id);
+        setTicketTypes(res);
+        setShowTicketModal(false);
+        setFormData();
+        toast.success('Cập nhật thành công')
+
+    }
     const handleFetch =  async () => {
         setShowModal(false);
         setEventSelected()
@@ -98,8 +162,7 @@ export default function ManageEvent() {
         }
     };
     const fetchEvents = async () => {
-        const res = await eventService.getAllEvents()
-       
+        const res = await eventService.getEventsByCreatedById(userId)
         setEvents(res);
     }
     const handleEdit = (event) => {
@@ -107,12 +170,14 @@ export default function ManageEvent() {
         setShowModal(true);
     }
     useEffect(() => {
+       if (!userId) return;
         fetchEvents()
-    }, [])
+    }, [userId])
     return (
         <div className={styles.container}>
-            <h3>Sự kiện của tôi</h3>
-            <table className='table'>
+            {ticketTypes && <div className={styles.back} onClick={() => handleBack()}><ArrowBackIcon /> </div>}
+            <h3 style={{margin:'1em 0'}}>{ticketTypes ? 'Quản lý vé': 'Sự kiện của tôi'}</h3>
+            {!ticketTypes && <table className='table'>
             <thead>
                 <tr>
                     <th>Tên sự kiện</th>
@@ -121,6 +186,7 @@ export default function ManageEvent() {
                     <th>Bắt đầu</th>
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
+                    <th></th>
                 
                 </tr>
             </thead>
@@ -133,11 +199,106 @@ export default function ManageEvent() {
                         <td>{formatService.formatDate(event.startTime)}</td>
                         <td>{formatService.formatDate(event.endTime)}</td>
                         <td>{event.statusName}</td>
+                        <td onClick={(e) => handleManageTicket(e,event)}>
+                            <ArrowForwardIosIcon />
+                        </td>
+                    </tr>
+                ))}
+                
+            </tbody>
+        </table>}
+        {
+            showTicketModal && 
+            <Modal 
+                title={'Cập nhật loại vé'}
+                onClose={() => {
+                    setShowTicketModal(false)
+                    
+                }}
+                onSubmit={() => handleEditTicketSubmit()}
+            >
+            <div style={{ maxHeight: '30em', overflow: 'auto' }}>
+                <Input label={'Tên loại vé'} name={'name'} value={formData.name} onChange={handleChange}/>
+                <div className='formGroup2'>
+                  
+                    <Input label={'Giá tiền'} name={'price'} value={formData.price} onChange={handleChange}/>
+                    <Input label={'Tổng số vé'} type='number' name={'total'} value={formData.total} onChange={handleChange}/>
+                </div>
+                <Input label={'Mô tả'} isTextArea={true} name={'description'} value={formData.description} onChange={handleChange}/>
+            </div>
+          
+            </Modal>
+        }
+        {
+            showNewTicketModal && 
+            <Modal 
+                title={'Tạo vé mới'}
+                onClose={() => {
+                    setShowNewTicketModal(false)
+                    
+                }}
+                onSubmit={() => handleNewTicketSubmit()}
+            >
+            <div style={{ maxHeight: '30em', overflow: 'auto' }}>
+                <Input label={'Tên loại vé'} name={'name'} value={formData.name} onChange={handleChange}/>
+                <div className='formGroup2'>
+                  
+                    <Input label={'Giá tiền'} name={'price'} value={formData.price} onChange={handleChange}/>
+                    <Input label={'Tổng số vé'} type='number' name={'total'} value={formData.total} onChange={handleChange}/>
+                </div>
+                <Input label={'Mô tả'} isTextArea={true} name={'description'} value={formData.description} onChange={handleChange}/>
+            </div>
+          
+            </Modal>
+        }
+        {ticketTypes &&
+            <>
+            <div className={styles.eventDetail}>
+                <div className={styles.img} style={{backgroundImage: `url(${ galleryService.getLinkImage(eventSelected.coverImg) })`}}></div>
+                <div className={styles.info}>
+                    <h3>{eventSelected.name}</h3>
+                    <div style={{fontSize:'12px'}}><Ptitle title={'Địa chỉ'} content={`${eventSelected.venueName} ${eventSelected.street} ${eventSelected.ward} ${eventSelected.distict} ${eventSelected.city}`}/></div>
+                    <div className={styles.detail}>
+                        <Ptitle title={'Trạng thái'} content={eventSelected.statusName}/>
+                        <Ptitle title={'Bắt đầu'} content={formatService.formatDate(eventSelected.startTime)}/>
+                        <Ptitle title={'Kết thúc'} content={formatService.formatDate(eventSelected.endTime)}/>
+                    </div>
+                </div>
+            </div>
+            {eventSelected.statusId==1 && <div className={styles.tool}>
+                <div className={styles.add} onClick={() => handleNewTicket()}><AddIcon /> </div>
+            </div>}
+            <table className='table'>
+            <thead>
+                <tr>
+                    <th>Loại vé</th>
+                    <th>Giá</th>
+                    <th>Mô tả</th>
+                    <th>Tổng số vé</th>
+                    <th>Đã bán</th>
+                  
+                
+                </tr>
+            </thead>
+            <tbody>
+                {ticketTypes.map((ticketType) => (
+                    <tr onClick={() => handleEditTicket(ticketType)}>
+                        <td>{ticketType.name}</td>
+                        <td>{ticketType.price}</td>
+                       
+                        <td>{ticketType.description}</td>
+                        <td>{ticketType.total}</td>
+                        <td>{(ticketType.total-ticketType.available)}</td>
+                       
                     </tr>
                 ))}
                 
             </tbody>
         </table>
+        </>
+        }
+        
+        
         {
             showModal && 
             <Modal 

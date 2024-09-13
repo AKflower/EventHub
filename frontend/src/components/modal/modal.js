@@ -2,7 +2,7 @@
 import React from 'react';
 import styles from './modal.module.scss';
 
-export default function Modal({ title, children, onSubmit, onClose, submitButtonLabel }) {
+export default function Modal({ title, children, onSubmit, onClose, submitButtonLabel, submitDeleteButton, onDelete }) {
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modal}>
@@ -17,7 +17,12 @@ export default function Modal({ title, children, onSubmit, onClose, submitButton
                     {onSubmit && <button className={styles.submitButton} onClick={onSubmit}>
                         {submitButtonLabel || 'Lưu'}
                     </button>}
-                    <button className={styles.cancelButton} onClick={onClose}>Hủy</button>
+                    {onDelete 
+                        && <button className={styles.deleteButton} onClick={onDelete}>
+                        {submitDeleteButton || 'Xóa'}
+                    </button>
+                    }
+                    <button className={styles.cancelButton} onClick={onClose}>Đóng</button>
                 </div>
             </div>
         </div>

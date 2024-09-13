@@ -81,3 +81,10 @@ code {
 .table th {
   padding: 1em;
 }
+
+.formGroup2{
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  padding: 1em 0;
+  gap: 1em;
+}
