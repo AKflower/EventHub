@@ -76,6 +76,16 @@ const searchEventsByName = async (name) => {
   }
 };
 
+const patchEventIsActive = async (id, isActive) => {
+  try {
+    const response = await axios.patch(`${API_URL}/events/${id}/active`, { isActive });
+    return response.data;
+  } catch (error) {
+    console.error('Error patching event isActive:', error);
+    throw error;
+  }
+};
+
 // Cập nhật sự kiện
 const updateEvent = async (eventId, eventData) => {
   try {
@@ -118,6 +128,7 @@ const eventService = {
   getEventsByCategoryAndIsFree,
   getEventsByCreatedById,
   searchEventsByName,
+  patchEventIsActive,
   updateEvent,
   softDeleteEvent,
   deleteEvent,
