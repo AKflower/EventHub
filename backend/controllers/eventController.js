@@ -61,7 +61,7 @@ const getAllEvents = async (req, res) => {
       SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id
-      WHERE e."isDelete" = false;
+      WHERE e."isDelete" = false AND e."isActive" = false;
     `;
     const result = await db.query(queryText);
     res.status(200).json(result.rows);
@@ -79,7 +79,7 @@ const getEventById = async (req, res) => {
       `SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id 
-      WHERE e.id = $1 AND e."isDelete" = FALSE`,
+      WHERE e.id = $1 AND e."isDelete" = FALSE AND e."isActive" = false`,
       [id]
     );
 
@@ -104,7 +104,7 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
       SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id  
-      WHERE e."isDelete" = false AND e."statusId" != 3`;
+      WHERE e."isDelete" = false AND e."statusId" != 3 AND e."isActive" = false`;
     const values = [];
 
     if (categories !== undefined) {
@@ -135,10 +135,10 @@ const getEventsByCreatedById = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT e.*, s.name AS "statusName"
+      `SELECT e.*, s."statusName"
        FROM events e
-       JOIN status s ON e."statusId" = s.id
-       WHERE e."createdById" = $1 AND e."isDelete" = FALSE
+       JOIN "eventStatus" s ON e."statusId" = s.id
+       WHERE e."createdById" = $1 AND e."isDelete" = FALSE AND e."isActive" = false
        ORDER BY e."createdTime" DESC`,
       [createdById]
     );
@@ -160,7 +160,7 @@ const getEventsByDate = async (req, res) => {
     const queryText = `SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id 
-      WHERE e."startTime"::date = $1 AND e."isDelete" = false`;
+      WHERE e."startTime"::date = $1 AND e."isDelete" = false AND e."isActive" = false`;
     const result = await db.query(queryText, [date]);
     res.status(200).json(result.rows);
   } catch (err) {
@@ -174,7 +174,7 @@ const getEventCountByCity = async (req, res) => {
     const queryText = `
       SELECT city, COUNT(*) as "eventCount"
       FROM events
-      WHERE "isDelete" = false
+      WHERE "isDelete" = false AND e."isActive" = false
       GROUP BY city
     `;
     const result = await db.query(queryText);
@@ -190,7 +190,7 @@ const getEventCountByCategory = async (req, res) => {
     const queryText = `
       SELECT category, COUNT(*) as "eventCount"
       FROM events
-      WHERE "isDelete" = false
+      WHERE "isDelete" = false AND e."isActive" = false
       GROUP BY category
     `;
     const result = await db.query(queryText);
@@ -212,7 +212,7 @@ const searchEventsByName = async (req, res) => {
     const queryText = `
       SELECT * FROM events
       WHERE name ILIKE $1
-        AND "isDelete" = false
+        AND "isDelete" = false AND e."isActive" = false
     `;
 
     const result = await db.query(queryText, [`%${name}%`]);
