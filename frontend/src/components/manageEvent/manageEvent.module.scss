@@ -25,3 +25,37 @@
         
     }
 }
+.eventDetail{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    padding: 1em 0;
+    gap: 1em;
+    .img{
+        height: 10em;
+        width: 100%;
+        background-size: cover;
+        border-radius: 5px;
+    }
+    .info {
+     
+        .detail{
+            font-size: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    }
+}
+.tool{
+    display: flex;
+    justify-content: flex-end;
+    .add {
+        cursor: pointer;
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+.back{
+    width: max-content;
+    cursor: pointer;
+}

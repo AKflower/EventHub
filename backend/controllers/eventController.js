@@ -135,9 +135,9 @@ const getEventsByCreatedById = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT e.*, s.name AS "statusName"
+      `SELECT e.*, s."statusName"
        FROM events e
-       JOIN status s ON e."statusId" = s.id
+       JOIN "eventStatus" s ON e."statusId" = s.id
        WHERE e."createdById" = $1 AND e."isDelete" = FALSE
        ORDER BY e."createdTime" DESC`,
       [createdById]

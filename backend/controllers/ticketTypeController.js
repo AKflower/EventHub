@@ -103,7 +103,7 @@ const updateTicketType = async (req, res) => {
     const result = await db.query(
       `UPDATE "ticketTypes" SET 
             "eventId" = $1, name = $2, price = $3, total = $4, "minBuy" = $5, "maxBuy" = $6, 
-            "startTime" = $7, "endTime" = $8, description = $9, img = $10, modifiedtime = CURRENT_TIMESTAMP 
+            "startTime" = $7, "endTime" = $8, description = $9, img = $10, "modifiedTime" = CURRENT_TIMESTAMP 
             WHERE id = $11 RETURNING *`,
       [
         eventId,
