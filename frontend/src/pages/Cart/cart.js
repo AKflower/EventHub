@@ -89,7 +89,7 @@ export default function Cart () {
                         <div className={styles.optionActive} onClick={() => navigate('/my-tickers')}>
                             <ConfirmationNumberIcon /> Vé của bạn
                         </div>
-                        <div className={styles.option}>
+                        <div className={styles.option} onClick={() => navigate('/organizer')}>
                             <CalendarMonthIcon /> Quản lý sự kiện
                         </div>
                     </div>

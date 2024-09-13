@@ -8,6 +8,7 @@ import galleryService from '../../services/galleryService'
 import { toast } from 'react-toastify';
 
 export default function FormCreate() {
+    const userId = localStorage.getItem('userId')
     const [preview, setPreview] = useState('');
     const [file, setFile] = useState(null);
     const [isSaving,setIsSaving] = useState(false)
@@ -65,7 +66,7 @@ export default function FormCreate() {
         };
         const res = await galleryService.addImage({name: formData.name,image:file})
         console.log(res.id);
-        const event = await eventService.createEvent({...formData, coverImg: res.id});
+        const event = await eventService.createEvent({...formData, coverImg: res.id,createdById: userId});
         toast.success('Tạo thành công!');
         setIsSaving(false)
         

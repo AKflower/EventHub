@@ -11,7 +11,7 @@ import Button from '../../components/button/button'
 import galleryService from '../../services/galleryService'
 import bookingService from '../../services/bookingService'
 import { useUserContext } from '../../context/UserContext'
-
+import formatService from '../../services/formatService'
 
 export default function EventDetail() {
     const { eventId } = useParams();
@@ -153,7 +153,7 @@ export default function EventDetail() {
                     </div>
                     <h4 className='d-flex y-center gap-1' style={{ color: '#379777', position: 'absolute', bottom: 0 }}>
                         <img src={icon.priceGreenIcon} style={{ width: '2em' }} />
-                        Từ 100.000 VND
+                        Từ {formatService.formatPrice(parseInt(event.minPrice,10))} VND
                     </h4>
                 </div>
 

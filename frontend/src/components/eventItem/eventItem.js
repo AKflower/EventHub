@@ -3,6 +3,7 @@ import icon from '../../assets/icon/icon'
 import { useNavigate } from 'react-router-dom';
 import galleryService from '../../services/galleryService';
 import { parseISO, format } from 'date-fns';
+import formatService from '../../services/formatService';
 
 export default function EventItem({ event }) {
     console.log(event);
@@ -30,7 +31,7 @@ export default function EventItem({ event }) {
                     <div className={styles.footer}>
                         <div className={styles.price}>
                             <img src={icon.priceIcon} style={{ width: '1.5em' }} />
-                            <span>từ {event.minPrice}</span>
+                            <span>từ {formatService.formatPrice(parseInt(event.minPrice))}</span>
                         </div>
                         <div className={styles.date}>
                             <img src={icon.calendarIcon} style={{ width: '1.5em' }} />
