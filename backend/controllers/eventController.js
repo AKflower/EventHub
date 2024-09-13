@@ -19,14 +19,15 @@ const createEvent = async (req, res) => {
     bank,
     branch,
     isFree,
+    createdById,
   } = req.body;
 
   try {
     const result = await db.query(
       `INSERT INTO events 
-            (logo, "coverImg", name, "venueName", city, district, ward, street, category, description, "startTime", "endTime", "accOwner", "accNumber", bank, branch, "isFree") 
+            (logo, "coverImg", name, "venueName", city, district, ward, street, category, description, "startTime", "endTime", "accOwner", "accNumber", bank, branch, "isFree", "createdById") 
             VALUES 
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) 
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) 
             RETURNING *`,
       [
         logo,
@@ -46,6 +47,7 @@ const createEvent = async (req, res) => {
         bank,
         branch,
         isFree,
+        createdById,
       ]
     );
     res.status(201).json(result.rows[0]);
@@ -265,6 +267,7 @@ const updateEvent = async (req, res) => {
     bank,
     branch,
     isFree,
+    createdById,
   } = req.body;
 
   try {
@@ -272,8 +275,8 @@ const updateEvent = async (req, res) => {
       `UPDATE events SET 
             logo = $1, "coverImg" = $2, name = $3, "venueName" = $4, city = $5, district = $6, ward = $7, street = $8, 
             category = $9, description = $10, "startTime" = $11, "endTime" = $12, "accOwner" = $13, "accNumber" = $14, 
-            bank = $15, branch = $16, "isFree" = $17, "modifiedTime" = CURRENT_TIMESTAMP 
-            WHERE id = $18 RETURNING *`,
+            bank = $15, branch = $16, "isFree" = $17, "createdById" = $18, "modifiedTime" = CURRENT_TIMESTAMP 
+            WHERE id = $19 RETURNING *`,
       [
         logo,
         coverImg,
@@ -292,6 +295,7 @@ const updateEvent = async (req, res) => {
         bank,
         branch,
         isFree,
+        createdById,
         id,
       ]
     );
