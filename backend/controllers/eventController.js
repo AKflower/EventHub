@@ -162,7 +162,7 @@ const getEventsByDate = async (req, res) => {
     const queryText = `SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id 
-      WHERE e."startTime"::date = $1 AND e."isDelete" = false AND e."isActive" = false`;
+      WHERE e."startTime"::date = $1 AND e."isDelete" = false AND e."isActive" = true`;
     const result = await db.query(queryText, [date]);
     res.status(200).json(result.rows);
   } catch (err) {
@@ -176,7 +176,7 @@ const getEventCountByCity = async (req, res) => {
     const queryText = `
       SELECT city, COUNT(*) as "eventCount"
       FROM events
-      WHERE "isDelete" = false AND "isActive" = false
+      WHERE "isDelete" = false AND "isActive" = true
       GROUP BY city
     `;
     const result = await db.query(queryText);
@@ -192,7 +192,7 @@ const getEventCountByCategory = async (req, res) => {
     const queryText = `
       SELECT category, COUNT(*) as "eventCount"
       FROM events
-      WHERE "isDelete" = false AND "isActive" = false
+      WHERE "isDelete" = false AND "isActive" = true
       GROUP BY category
     `;
     const result = await db.query(queryText);
@@ -214,13 +214,83 @@ const searchEventsByName = async (req, res) => {
     const queryText = `
       SELECT * FROM events
       WHERE name ILIKE $1
-        AND "isDelete" = false AND "isActive" = false
+        AND "isDelete" = false AND "isActive" = true
     `;
 
     const result = await db.query(queryText, [`%${name}%`]);
     res.status(200).json(result.rows);
   } catch (err) {
     console.error("Error searching events by name:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const searchEvents = async (req, res) => {
+  const { name, categories, isFree, city } = req.query;
+
+  const categoryList = Array.isArray(categories) ? categories : [categories];
+
+  try {
+    let queryText = `
+      SELECT e.*, s."statusName"
+      FROM events e
+      JOIN "eventStatus" s ON e."statusId" = s.id
+      WHERE e."isDelete" = false AND e."statusId" != 3 AND e."isActive" = true
+    `;
+    const values = [];
+
+    if (name) {
+      queryText += ` AND e.name ILIKE $${values.length + 1}`;
+      values.push(`%${name}%`);
+    }
+
+    if (categories !== undefined) {
+      queryText += ` AND e.category = ANY($${values.length + 1}::text[])`;
+      values.push(categoryList);
+    }
+
+    if (isFree !== undefined) {
+      queryText += ` AND e."isFree" = $${values.length + 1}`;
+      values.push(isFree);
+    }
+
+    if (city !== undefined) {
+      queryText += ` AND e.city = $${values.length + 1}`;
+      values.push(city);
+    }
+
+    const result = await db.query(queryText, values);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error searching events:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getTop8EventsByTicketSales = async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT 
+        e.*,
+		    s."statusName",
+        COALESCE(SUM(tt.total), 0) AS "totalTickets",
+        COALESCE(SUM(tt.available), 0) AS "availableTickets",
+        CASE 
+          WHEN SUM(tt.total) > 0 THEN ROUND((SUM(tt.total) - SUM(tt.available)) * 100.0 / SUM(tt.total), 2)
+          ELSE 0
+        END AS "salesPercentage"
+      FROM events e
+      LEFT JOIN "ticketTypes" tt ON e.id = tt."eventId"
+	    JOIN "eventStatus" s ON e."statusId" = s.id
+      WHERE e."isActive" = true AND e."statusId" != 3 AND e."isDelete" = false
+      GROUP BY e.id, s."statusName"
+      ORDER BY "salesPercentage" DESC
+      LIMIT 8;
+    `);
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching top events by ticket sales:", err);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -359,6 +429,8 @@ module.exports = {
   getEventsByCreatedById,
   getEventCountByCity,
   getEventCountByCategory,
+  getTop8EventsByTicketSales,
+  searchEvents,
   patchEventIsActive,
   updateEvent,
   softDeleteEvent,

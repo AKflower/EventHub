@@ -47,6 +47,47 @@ const getEventsByCreatedById = async (createdById) => {
   }
 };
 
+const getTop8EventsByTicketSales = async() => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/top8`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching event by ID:", error);
+    throw error;
+  }
+};
+
+const searchEvents = async ({ name, categories, isFree, city }) => {
+  try {
+    const params = {};
+    
+    if (name) {
+      params.name = name;
+    }
+
+    if (categories) {
+      params.categories = Array.isArray(categories) ? categories : [categories];
+    }
+
+    if (isFree !== undefined) {
+      params.isFree = isFree;
+    }
+
+    if (city) {
+      params.city = city;
+    }
+
+    const response = await axios.get(API_URL, { params });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error searching events:', error);
+    throw error; 
+  }
+};
+
 // Lọc sự kiện theo danh mục và trạng thái miễn phí
 const getEventsByCategoryAndIsFree = async (categories, isFree, city) => {
   try {
@@ -128,6 +169,8 @@ const eventService = {
   getEventsByCategoryAndIsFree,
   getEventsByCreatedById,
   searchEventsByName,
+  getTop8EventsByTicketSales,
+  searchEvents,
   patchEventIsActive,
   updateEvent,
   softDeleteEvent,
