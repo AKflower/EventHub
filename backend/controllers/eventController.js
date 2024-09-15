@@ -63,7 +63,7 @@ const getAllEvents = async (req, res) => {
       SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id
-      WHERE e."isDelete" = false AND e."isActive" = false;
+      WHERE e."isDelete" = false AND e."isActive" = true;
     `;
     const result = await db.query(queryText);
     res.status(200).json(result.rows);
@@ -81,7 +81,7 @@ const getEventById = async (req, res) => {
       `SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id 
-      WHERE e.id = $1 AND e."isDelete" = FALSE AND e."isActive" = false`,
+      WHERE e.id = $1 AND e."isDelete" = FALSE AND e."isActive" = true`,
       [id]
     );
 
@@ -106,7 +106,7 @@ const getEventsByCategoryAndIsFree = async (req, res) => {
       SELECT e.*, s."statusName"
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id  
-      WHERE e."isDelete" = false AND e."statusId" != 3 AND e."isActive" = false`;
+      WHERE e."isDelete" = false AND e."statusId" != 3 AND e."isActive" = true`;
     const values = [];
 
     if (categories !== undefined) {
@@ -140,7 +140,7 @@ const getEventsByCreatedById = async (req, res) => {
       `SELECT e.*, s."statusName"
        FROM events e
        JOIN "eventStatus" s ON e."statusId" = s.id
-       WHERE e."createdById" = $1 AND e."isDelete" = FALSE AND e."isActive" = false
+       WHERE e."createdById" = $1 AND e."isDelete" = FALSE
        ORDER BY e."createdTime" DESC`,
       [createdById]
     );

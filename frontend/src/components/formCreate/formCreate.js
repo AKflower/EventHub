@@ -69,6 +69,22 @@ export default function FormCreate() {
         const event = await eventService.createEvent({...formData, coverImg: res.id,createdById: userId});
         toast.success('Tạo thành công!');
         setIsSaving(false)
+        setFormData({
+            name: '',
+            venueName: '',
+            district: '',
+            ward: '',
+            city: '',
+            category: '',
+            description: '',
+            accOwner: '',
+            accNumber: '',
+            bank: '',
+            branch: '',
+            street: '',
+            startTime: '',
+            endTime: ''
+        })
         
     }
     const handleFileChange = (e) => {

@@ -236,6 +236,7 @@ const sendMailBooking = async (email, booking) => {
 
 const updateStatusBookingPaid = async (req, res) => {
   const { id } = req.params;
+  const { vnp_Amount } = req.query;
   try {
     const result = await db.query(
       `UPDATE bookings SET "statusId" = 3, "modifiedTime" = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *`,
@@ -248,6 +249,11 @@ const updateStatusBookingPaid = async (req, res) => {
       result.rows[0].ticketInfo,
       result.rows[0].eventId,
       id
+    );
+    const bill = await db.query(
+      `INSERT INTO bills ("userId", "bookingId", total, "paymentMethodId", "statusId") 
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [result.rows[0].userId, result.rows[0].id, vnp_Amount, 1, 1]
     );
     await sendMailBooking(result.rows[0].mail, result.rows[0]);
     // res.status(200).json(result.rows[0]);

@@ -41,7 +41,9 @@ export default function FormUpdate({event,save,onFetch}) {
     }, [save])
     const fileInputRef = useRef(null);
     const handleImageUploadClick = () => {
+        if (event.statusId==1)
         fileInputRef.current.click(); // Kích hoạt click trên input file
+        else return;
     };
     const handleSubmit = async () => {
         console.log(formData);
@@ -96,11 +98,12 @@ export default function FormUpdate({event,save,onFetch}) {
                     ref={fileInputRef}
                     onChange={(e) => handleFileChange(e)}
                     style={{ display: 'none' }} // Ẩn input file
+                    
                 />
             </div>
 
             <div className={styles.formGroup}>
-                <Input label={'Tên sự kiện'} name={'name'} value={formData.name} onChange={handleChange} />
+                <Input label={'Tên sự kiện'} name={'name'} value={formData.name} onChange={handleChange}  isDisabled={event.statusId!=1} />
 
             </div>
             <div className={styles.formGroup}>
@@ -108,7 +111,7 @@ export default function FormUpdate({event,save,onFetch}) {
                     label={'Thể loại sự kiện'}
                     name={'category'}
                     value={formData.category}
-                    onChange={handleChange}
+                    onChange={handleChange}  isDisabled={event.statusId!=1}
                     options={[
                         {
                             value: '',
@@ -123,7 +126,7 @@ export default function FormUpdate({event,save,onFetch}) {
                             label: 'Thể thao',
                         },
                         {
-                            value: 'Theater & Art',
+                            value: 'Theaters & Art',
                             label: 'Sân khấu & Nghệ thuật',
                         },
                         {
@@ -135,28 +138,28 @@ export default function FormUpdate({event,save,onFetch}) {
 
             </div>
             <div className={styles.formGroup}>
-                <Input label={'Tên địa điểm'} name={'venueName'} value={formData.venueName} onChange={handleChange} />
+                <Input label={'Tên địa điểm'} name={'venueName'} value={formData.venueName} onChange={handleChange}  isDisabled={event.statusId!=1} />
             </div>
             <div className={styles.formGroup2}>
-                <Input label={'Tỉnh/Thành'} name={'city'} value={formData.city} onChange={handleChange} />
-                <Input label={'Quận/Huyện'} name={'district'} value={formData.district} onChange={handleChange} />
-                <Input label={'Phường/Xã'} name={'ward'} value={formData.ward} onChange={handleChange} />
-                <Input label={'Số nhà/Đường'} name={'street'} value={formData.street} onChange={handleChange} />
+                <Input label={'Tỉnh/Thành'} name={'city'} value={formData.city} onChange={handleChange}  isDisabled={event.statusId!=1} />
+                <Input label={'Quận/Huyện'} name={'district'} value={formData.district} onChange={handleChange}  isDisabled={event.statusId!=1} />
+                <Input label={'Phường/Xã'} name={'ward'} value={formData.ward} onChange={handleChange}  isDisabled={event.statusId!=1} />
+                <Input label={'Số nhà/Đường'} name={'street'} value={formData.street} onChange={handleChange}  isDisabled={event.statusId!=1} />
 
             </div>
             <div className={styles.formGroup}>
                 <Input label={'Mô tả'} name={'description'} isTextArea={true} />
             </div>
             <div className={styles.formGroup2}>
-                <Input label={'Thời gian bắt đầu'} name={'startTime'} type='datetime-local' value={formData.startTime} onChange={handleChange} />
-                <Input label={'Thời gian kết thúc'} name={'endTime'} type='datetime-local' value={formData.endTime} onChange={handleChange} />
+                <Input label={'Thời gian bắt đầu'} name={'startTime'} type='datetime-local' value={formData.startTime.endsWith('Z') ? formData.startTime.slice(0,-1) : formData.startTime} onChange={handleChange}  isDisabled={event.statusId!=1} />
+                <Input label={'Thời gian kết thúc'} name={'endTime'} type='datetime-local' value={formData.endTime.endsWith('Z') ? formData.endTime.slice(0,-1) : formData.endTime} onChange={handleChange}  isDisabled={event.statusId!=1} />
 
             </div>
             <div className={styles.formGroup2}>
-                <Input label={'Tên người tổ chức'} name={'accOwner'} value={formData.accOwner} onChange={handleChange} />
-                <Input label={'Số điện thoại'} name={'accNumber'} value={formData.accNumber} onChange={handleChange} />
-                <Input label={'Ngân hàng'} name={'bank'} value={formData.bank} onChange={handleChange} />
-                <Input label={'Chi nhánh'} name={'branch'} value={formData.branch} onChange={handleChange} />
+                <Input label={'Tên người tổ chức'} name={'accOwner'} value={formData.accOwner} onChange={handleChange}  isDisabled={event.statusId!=1} />
+                <Input label={'Số điện thoại'} name={'accNumber'} value={formData.accNumber} onChange={handleChange}  isDisabled={event.statusId!=1} />
+                <Input label={'Ngân hàng'} name={'bank'} value={formData.bank} onChange={handleChange}  isDisabled={event.statusId!=1} />
+                <Input label={'Chi nhánh'} name={'branch'} value={formData.branch} onChange={handleChange}  isDisabled={event.statusId!=1} />
 
             </div>
            

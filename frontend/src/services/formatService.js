@@ -32,7 +32,7 @@ const formatService = {
         const year = date.getUTCFullYear(); // Lấy năm
       
         // Định dạng theo HH:mm DDMMYYYY
-        return `${hours}:${minutes} ${day}${month}${year}`;
+        return `${hours}:${minutes} ${day}/${month}/${year}`;
       }
 }
 export default formatService;

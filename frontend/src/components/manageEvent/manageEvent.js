@@ -148,6 +148,11 @@ export default function ManageEvent() {
         setSave(false)
         fetchEvents()
     }
+    const handleActive = async () => {
+        const res = await eventService.patchEventIsActive(eventSelected.id,true);
+        toast.success('Sự kiện đã được mở bán vé!');
+        setEventSelected(res);
+    }
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
         setFile(selectedFile);
@@ -195,10 +200,10 @@ export default function ManageEvent() {
                     <tr onClick={() => handleEdit(event)}>
                         <td>{event.name}</td>
                         <td>{event.category}</td>
-                        <td>{`${event.venueName} ${event.street} ${event.ward} ${event.distict} ${event.city}`}</td>
+                        <td>{`${event.venueName} ${event.street} ${event.ward} ${event.district} ${event.city}`}</td>
                         <td>{formatService.formatDate(event.startTime)}</td>
                         <td>{formatService.formatDate(event.endTime)}</td>
-                        <td>{event.statusName}</td>
+                        <td>{event.isActive ? event.statusName : 'Chưa mở bán vé'}</td>
                         <td onClick={(e) => handleManageTicket(e,event)}>
                             <ArrowForwardIosIcon />
                         </td>
@@ -221,7 +226,7 @@ export default function ManageEvent() {
                 <Input label={'Tên loại vé'} name={'name'} value={formData.name} onChange={handleChange}/>
                 <div className='formGroup2'>
                   
-                    <Input label={'Giá tiền'} name={'price'} value={formData.price} onChange={handleChange}/>
+                    <Input label={'Giá tiền'} name={'price'} value={formatService.formatPrice(parseInt(formData.price))} onChange={handleChange}/>
                     <Input label={'Tổng số vé'} type='number' name={'total'} value={formData.total} onChange={handleChange}/>
                 </div>
                 <Input label={'Mô tả'} isTextArea={true} name={'description'} value={formData.description} onChange={handleChange}/>
@@ -243,7 +248,7 @@ export default function ManageEvent() {
                 <Input label={'Tên loại vé'} name={'name'} value={formData.name} onChange={handleChange}/>
                 <div className='formGroup2'>
                   
-                    <Input label={'Giá tiền'} name={'price'} value={formData.price} onChange={handleChange}/>
+                    <Input label={'Giá tiền'} name={'price'} value={formatService.formatPrice(parseInt(formData.price,10))} onChange={handleChange}/>
                     <Input label={'Tổng số vé'} type='number' name={'total'} value={formData.total} onChange={handleChange}/>
                 </div>
                 <Input label={'Mô tả'} isTextArea={true} name={'description'} value={formData.description} onChange={handleChange}/>
@@ -257,12 +262,19 @@ export default function ManageEvent() {
                 <div className={styles.img} style={{backgroundImage: `url(${ galleryService.getLinkImage(eventSelected.coverImg) })`}}></div>
                 <div className={styles.info}>
                     <h3>{eventSelected.name}</h3>
-                    <div style={{fontSize:'12px'}}><Ptitle title={'Địa chỉ'} content={`${eventSelected.venueName} ${eventSelected.street} ${eventSelected.ward} ${eventSelected.distict} ${eventSelected.city}`}/></div>
+                    <div style={{fontSize:'12px'}}><Ptitle title={'Địa chỉ'} content={`${eventSelected.venueName} ${eventSelected.street} ${eventSelected.ward} ${eventSelected.district} ${eventSelected.city}`}/></div>
                     <div className={styles.detail}>
-                        <Ptitle title={'Trạng thái'} content={eventSelected.statusName}/>
+                        <Ptitle title={'Trạng thái'} content={eventSelected.isActive ?  eventSelected.statusName : 'Chưa mở bán vé'}/>
                         <Ptitle title={'Bắt đầu'} content={formatService.formatDate(eventSelected.startTime)}/>
                         <Ptitle title={'Kết thúc'} content={formatService.formatDate(eventSelected.endTime)}/>
                     </div>
+                    {!eventSelected.isActive && <div>
+                        <Button name={'Mở bán vé'} color={ticketTypes.length==0 ? 'silver' : ''} onClick={() => {
+             
+                        if (ticketTypes.length==0) toast.warning('Phải có ít nhất 1 loại vé!');
+                        else   handleActive()
+                        }}/>
+                    </div>}
                 </div>
             </div>
             {eventSelected.statusId==1 && <div className={styles.tool}>
@@ -284,7 +296,7 @@ export default function ManageEvent() {
                 {ticketTypes.map((ticketType) => (
                     <tr onClick={() => handleEditTicket(ticketType)}>
                         <td>{ticketType.name}</td>
-                        <td>{ticketType.price}</td>
+                        <td>{formatService.formatPrice(parseInt(ticketType.price,10))}</td>
                        
                         <td>{ticketType.description}</td>
                         <td>{ticketType.total}</td>
@@ -292,9 +304,11 @@ export default function ManageEvent() {
                        
                     </tr>
                 ))}
-                
             </tbody>
+
         </table>
+        {ticketTypes.length==0 && <h3 style={{margin: '2em 0'}} className='d-flex x-center'>Hãy tạo vé cho sự kiện của bạn!</h3>}
+
         </>
         }
         

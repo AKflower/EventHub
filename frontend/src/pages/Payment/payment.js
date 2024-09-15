@@ -110,7 +110,7 @@ export default function Payment({ status = 0 }) {
                         </div>
                         <div className='d-flex x-center' style={{fontFamily:'Londrina Solid',fontSize:'2em'}}><span style={{color:'#379777' }}>Event</span><span style={{color:'#000'}}>Hub</span></div>  
                         <div className='d-flex x-center y-center'>xin chân thành cảm ơn bạn vì đã sử dụng dịch vụ của chúng tôi.</div>
-                        <div className='d-flex x-center' style={{ padding: '1em 0' }}><Button name={'Xem vé đã mua'} width={'15em'} color='#379777'  /></div>
+                        <div className='d-flex x-center' style={{ padding: '1em 0' }}><Button name={'Xem vé đã mua'} width={'15em'} color='#379777'  onClick={() => navigate('/my-tickets')}/></div>
 
                     </div>
                 }

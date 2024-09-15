@@ -17,9 +17,9 @@ const createTicketType = async (req, res) => {
   try {
     const result = await db.query(
       `INSERT INTO "ticketTypes" 
-            ("eventId", name, price, total, "minBuy", "maxBuy", "startTime", "endTime", description, img) 
+            ("eventId", name, price, total, "minBuy", "maxBuy", "startTime", "endTime", description, img, available) 
             VALUES 
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$4) 
             RETURNING *`,
       [
         eventId,
@@ -32,6 +32,7 @@ const createTicketType = async (req, res) => {
         endTime,
         description,
         img,
+       
       ]
     );
     res.status(201).json(result.rows[0]);
