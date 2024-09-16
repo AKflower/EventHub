@@ -47,10 +47,10 @@ const getEventsByCreatedById = async (createdById) => {
   }
 };
 
-const getTop8EventsByTicketSales = async() => {
+const getTop8EventsByTicketSales = async(quantity) => {
   try {
     const response = await axios.get(
-      `${API_BASE_URL}/top8`
+      `${API_BASE_URL}/${quantity}/top`
     );
     return response.data;
   } catch (error) {

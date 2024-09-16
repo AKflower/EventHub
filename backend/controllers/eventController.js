@@ -10,7 +10,7 @@ const createEvent = async (req, res) => {
     district,
     ward,
     street,
-    category,
+    categoryId,
     description,
     startTime,
     endTime,
@@ -25,7 +25,7 @@ const createEvent = async (req, res) => {
   try {
     const result = await db.query(
       `INSERT INTO events 
-            (logo, "coverImg", name, "venueName", city, district, ward, street, category, description, "startTime", "endTime", "accOwner", "accNumber", bank, branch, "isFree", "createdById") 
+            (logo, "coverImg", name, "venueName", city, district, ward, street, "categoryId", description, "startTime", "endTime", "accOwner", "accNumber", bank, branch, "isFree", "createdById") 
             VALUES 
             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) 
             RETURNING *`,
@@ -38,7 +38,7 @@ const createEvent = async (req, res) => {
         district,
         ward,
         street,
-        category,
+        categoryId,
         description,
         startTime,
         endTime,
@@ -60,9 +60,10 @@ const createEvent = async (req, res) => {
 const getAllEvents = async (req, res) => {
   try {
     const queryText = `
-      SELECT e.*, s."statusName"
+      SELECT e.*, s."statusName", c.category
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id
+      JOIN categories c ON e."categoryId" = c.id
       WHERE e."isDelete" = false AND e."isActive" = true;
     `;
     const result = await db.query(queryText);
@@ -78,9 +79,10 @@ const getEventById = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT e.*, s."statusName"
+      `SELECT e.*, s."statusName", c.category
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id 
+      JOIN categories c ON e."categoryId" = c.id
       WHERE e.id = $1 AND e."isDelete" = FALSE AND e."isActive" = true`,
       [id]
     );
@@ -137,9 +139,10 @@ const getEventsByCreatedById = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT e.*, s."statusName"
+      `SELECT e.*, s."statusName", c.category
        FROM events e
        JOIN "eventStatus" s ON e."statusId" = s.id
+       JOIN categories c ON e."categoryId" = c.id
        WHERE e."createdById" = $1 AND e."isDelete" = FALSE
        ORDER BY e."createdTime" DESC`,
       [createdById]
@@ -159,9 +162,11 @@ const getEventsByCreatedById = async (req, res) => {
 const getEventsByDate = async (req, res) => {
   const { date } = req.query;
   try {
-    const queryText = `SELECT e.*, s."statusName"
+    const queryText = `
+      SELECT e.*, s."statusName", c.category
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id 
+      JOIN categories c ON e."categoryId" = c.id
       WHERE e."startTime"::date = $1 AND e."isDelete" = false AND e."isActive" = true`;
     const result = await db.query(queryText, [date]);
     res.status(200).json(result.rows);
@@ -190,10 +195,11 @@ const getEventCountByCity = async (req, res) => {
 const getEventCountByCategory = async (req, res) => {
   try {
     const queryText = `
-      SELECT category, COUNT(*) as "eventCount"
-      FROM events
+      SELECT c.category, COUNT(*) as "eventCount"
+      FROM events e
+      JOIN categories c ON e."categoryId" = c.id
       WHERE "isDelete" = false AND "isActive" = true
-      GROUP BY category
+      GROUP BY e."categoryId", c.category
     `;
     const result = await db.query(queryText);
     res.status(200).json(result.rows);
@@ -232,20 +238,21 @@ const searchEvents = async (req, res) => {
 
   try {
     let queryText = `
-      SELECT e.*, s."statusName"
+      SELECT e.*, s."statusName", c.category
       FROM events e
       JOIN "eventStatus" s ON e."statusId" = s.id
+      JOIN categories c ON e."categoryId" = c.id
       WHERE e."isDelete" = false AND e."statusId" != 3 AND e."isActive" = true
     `;
     const values = [];
     console.log('Check: ',name);
     if (name) {
-      queryText += ` AND e.name ILIKE $${values.length + 1}`;
+      queryText += ` AND unaccent(e.name) ILIKE unaccent($${values.length + 1})`;
       values.push(`%${name}%`);
     }
 
     if (categories !== undefined) {
-      queryText += ` AND e.category = ANY($${values.length + 1}::text[])`;
+      queryText += ` AND e."categoryId" = ANY($${values.length + 1}::text[])`;
       values.push(categoryList);
     }
 
@@ -268,11 +275,13 @@ const searchEvents = async (req, res) => {
 };
 
 const getTop8EventsByTicketSales = async (req, res) => {
+  const { quantity } = req.params;
   try {
     const result = await db.query(`
       SELECT 
         e.*,
 		    s."statusName",
+        c.category,
         COALESCE(SUM(tt.total), 0) AS "totalTickets",
         COALESCE(SUM(tt.available), 0) AS "availableTickets",
         CASE 
@@ -282,11 +291,12 @@ const getTop8EventsByTicketSales = async (req, res) => {
       FROM events e
       LEFT JOIN "ticketTypes" tt ON e.id = tt."eventId"
 	    JOIN "eventStatus" s ON e."statusId" = s.id
+      JOIN categories c ON e."categoryId" = c.id
       WHERE e."isActive" = true AND e."statusId" != 3 AND e."isDelete" = false
-      GROUP BY e.id, s."statusName"
+      GROUP BY e.id, s."statusName", c.category
       ORDER BY "salesPercentage" DESC
-      LIMIT 8;
-    `);
+      LIMIT $1;
+    `,[quantity]);
 
     res.status(200).json(result.rows);
   } catch (err) {
@@ -328,7 +338,7 @@ const updateEvent = async (req, res) => {
     district,
     ward,
     street,
-    category,
+    categoryId,
     description,
     startTime,
     endTime,
@@ -344,7 +354,7 @@ const updateEvent = async (req, res) => {
     const result = await db.query(
       `UPDATE events SET 
             logo = $1, "coverImg" = $2, name = $3, "venueName" = $4, city = $5, district = $6, ward = $7, street = $8, 
-            category = $9, description = $10, "startTime" = $11, "endTime" = $12, "accOwner" = $13, "accNumber" = $14, 
+            "categoryId" = $9, description = $10, "startTime" = $11, "endTime" = $12, "accOwner" = $13, "accNumber" = $14, 
             bank = $15, branch = $16, "isFree" = $17, "createdById" = $18, "modifiedTime" = CURRENT_TIMESTAMP 
             WHERE id = $19 RETURNING *`,
       [
@@ -356,7 +366,7 @@ const updateEvent = async (req, res) => {
         district,
         ward,
         street,
-        category,
+        categoryId,
         description,
         startTime,
         endTime,
