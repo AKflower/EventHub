@@ -195,10 +195,11 @@ const getEventCountByCity = async (req, res) => {
 const getEventCountByCategory = async (req, res) => {
   try {
     const queryText = `
-      SELECT category, COUNT(*) as "eventCount"
-      FROM events
+      SELECT c.category, COUNT(*) as "eventCount"
+      FROM events e
+      JOIN categories c ON e."categoryId" = c.id
       WHERE "isDelete" = false AND "isActive" = true
-      GROUP BY category
+      GROUP BY e."categoryId", c.category
     `;
     const result = await db.query(queryText);
     res.status(200).json(result.rows);
