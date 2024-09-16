@@ -268,6 +268,7 @@ const searchEvents = async (req, res) => {
 };
 
 const getTop8EventsByTicketSales = async (req, res) => {
+  const { quantity } = req.params;
   try {
     const result = await db.query(`
       SELECT 
@@ -285,8 +286,8 @@ const getTop8EventsByTicketSales = async (req, res) => {
       WHERE e."isActive" = true AND e."statusId" != 3 AND e."isDelete" = false
       GROUP BY e.id, s."statusName"
       ORDER BY "salesPercentage" DESC
-      LIMIT 8;
-    `);
+      LIMIT $1;
+    `,[quantity]);
 
     res.status(200).json(result.rows);
   } catch (err) {

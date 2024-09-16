@@ -11,7 +11,7 @@ router.get('/events/by-date', eventController.getEventsByDate);
 router.get('/events/search', eventController.searchEvents);
 router.get('/events/count-by-city', eventController.getEventCountByCity);
 router.get('/events/count-by-category', eventController.getEventCountByCategory);
-router.get('/events/top8', eventController.getTop8EventsByTicketSales);
+router.get('/events/:quantity/top', eventController.getTop8EventsByTicketSales);
 router.get('/events/created-by/:createdById', eventController.getEventsByCreatedById);
 router.get('/events/:id', eventController.getEventById);
 router.get('/search-by-name', eventController.searchEventsByName);
