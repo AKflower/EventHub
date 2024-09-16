@@ -252,7 +252,7 @@ const searchEvents = async (req, res) => {
     }
 
     if (categories !== undefined) {
-      queryText += ` AND e.category = ANY($${values.length + 1}::text[])`;
+      queryText += ` AND e."categoryId" = ANY($${values.length + 1}::text[])`;
       values.push(categoryList);
     }
 
