@@ -29,10 +29,10 @@ export default function Home() {
             {!searchRes &&
             <>
                 <EventList category={'Hot'} isShort={true} />
-                <EventList category={'Music'} isShort={true} />
-                <EventList category={'Sport'} isShort={true} />
-                <EventList category={'Theaters & Art'} isShort={true} />
-                <EventList category={'Others'} isShort={true} />
+                <EventList category={1} isShort={true} />
+                <EventList category={3} isShort={true} />
+                <EventList category={2} isShort={true} />
+                <EventList category={4} isShort={true} />
             </>
             }
             {

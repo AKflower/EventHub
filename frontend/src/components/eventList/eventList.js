@@ -25,7 +25,7 @@ export default function EventList({ category, isShort,eventList }) {
             else setEvents(res);
         }
         else {
-            const res = await eventService.getEventsByCategoryAndIsFree(category)
+            const res = await eventService.searchEvents({categories: category})
             var data = []
             if (isShort) {
                 data = await res.filter((item, index) => index <= 2)
@@ -64,13 +64,13 @@ export default function EventList({ category, isShort,eventList }) {
         switch (a) {
             case 'Hot':
                 return 'Hot'
-            case 'Music':
+            case 1:
                 return 'Âm nhạc'
-            case 'Sport':
+            case 3:
                 return 'Thể thao'
-            case 'Theaters & Art':
+            case 2:
                 return 'Sân khấu & Nghệ thuật'
-            case 'Others':
+            case 4:
                 return 'Sự kiện khác'
             case 'Search':
                 return 'Kết quả tìm kiếm'

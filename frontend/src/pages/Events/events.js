@@ -3,10 +3,10 @@ import EventList from '../../components/eventList/eventList'
 import { useParams } from 'react-router-dom';
 
 export default function Events () {
-    const {category} = useParams()
+    const {categoryId} = useParams()
     return (
         <div className='main'>
-            <EventList category={category}/>
+            <EventList category={categoryId}/>
         </div>
     )
 }

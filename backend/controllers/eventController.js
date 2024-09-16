@@ -233,6 +233,7 @@ const searchEventsByName = async (req, res) => {
 
 const searchEvents = async (req, res) => {
   const { name, categories, isFree, city } = req.query;
+  console.log('Check: ',categories);
 
   const categoryList = Array.isArray(categories) ? categories : [categories];
 
@@ -245,7 +246,6 @@ const searchEvents = async (req, res) => {
       WHERE e."isDelete" = false AND e."statusId" != 3 AND e."isActive" = true
     `;
     const values = [];
-    console.log('Check: ',name);
     if (name) {
       queryText += ` AND unaccent(e.name) ILIKE unaccent($${values.length + 1})`;
       values.push(`%${name}%`);
