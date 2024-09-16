@@ -238,7 +238,7 @@ const searchEvents = async (req, res) => {
       WHERE e."isDelete" = false AND e."statusId" != 3 AND e."isActive" = true
     `;
     const values = [];
-
+    console.log('Check: ',name);
     if (name) {
       queryText += ` AND e.name ILIKE $${values.length + 1}`;
       values.push(`%${name}%`);
