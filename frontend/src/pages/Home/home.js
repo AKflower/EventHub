@@ -4,21 +4,42 @@ import Search from '../../components/search/search'
 import { useUserContext } from '../../context/UserContext'
 import { useState, useEffect } from 'react'
 import eventService from '../../services/eventService'
+import { useSearchParams } from 'react-router-dom'
 
-export default function Home () {
-    const { sessionInfo } =  useUserContext()
+export default function Home() {
+    const { sessionInfo } = useUserContext()
     const [events, setEvents] = useState([]);
-  
+    const [searchRes, setSearchRes] = useState(null)
+    const [searchParams] = useSearchParams();
+    const name = searchParams.get('name');
+    const categories = searchParams.get('categories');
+    const handleSearch = async () => {
+        console.log('search: ', name,categories);
+        const res = await eventService.searchEvents({name,categories});
+        setSearchRes(res)
+        console.log('Test',res);
+    }
     useEffect(() => {
-
-    }, [])
+        handleSearch()
+    }, [name, categories])
     return (
         <div className='main'>
             <Search />
-            <EventList category={'Music'} isShort={true}/>
-            <EventList category={'Sport'} isShort={true}/>
-            <EventList category={'Theaters & Art'} isShort={true}/>
-            <EventList category={'Others'} isShort={true}/>
+
+            {!searchRes &&
+            <>
+                <EventList category={'Hot'} isShort={true} />
+                <EventList category={'Music'} isShort={true} />
+                <EventList category={'Sport'} isShort={true} />
+                <EventList category={'Theaters & Art'} isShort={true} />
+                <EventList category={'Others'} isShort={true} />
+            </>
+            }
+            {
+                searchRes && 
+                <EventList category={'Search'} isShort={false} eventList={searchRes}/>
+            }
+
         </div>
     )
 }

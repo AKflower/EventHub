@@ -60,6 +60,7 @@ const getTop8EventsByTicketSales = async(quantity) => {
 };
 
 const searchEvents = async ({ name, categories, isFree, city }) => {
+  console.log('name: ',name,categories );
   try {
     const params = {};
     
@@ -79,7 +80,7 @@ const searchEvents = async ({ name, categories, isFree, city }) => {
       params.city = city;
     }
 
-    const response = await axios.get(API_URL, { params });
+    const response = await axios.get(API_BASE_URL+'/search', { params });
 
     return response.data;
   } catch (error) {

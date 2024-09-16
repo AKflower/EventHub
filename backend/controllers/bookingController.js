@@ -210,8 +210,20 @@ const updateBooking = async (req, res) => {
 };
 
 //Test
+const formatDate =  (dateString) => {
+  const date = new Date(dateString);
 
-const sendMailBooking = async (email, booking) => {
+  // Lấy giờ, phút, ngày, tháng, và năm
+  const hours = String(date.getUTCHours()).padStart(2, '0'); // Lấy giờ và đảm bảo 2 chữ số
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0'); // Lấy phút và đảm bảo 2 chữ số
+  const day = String(date.getUTCDate()).padStart(2, '0'); // Lấy ngày và đảm bảo 2 chữ số
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Lấy tháng và đảm bảo 2 chữ số
+  const year = date.getUTCFullYear(); // Lấy năm
+
+  // Định dạng theo HH:mm DDMMYYYY
+  return `${hours}:${minutes} ${day}/${month}/${year}`;
+}
+const sendMailBooking = async (email, booking, event,amount) => {
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
@@ -219,15 +231,105 @@ const sendMailBooking = async (email, booking) => {
       pass: "jprz kvkb ncra wflf",
     },
   });
-
+  booking.start = formatDate(event.startTime);
+  booking.end = formatDate(event.endTime);
+  console.log(booking);
   const mailOptions = {
     //Sửa nội dung
     from: "eventhub173@gmail.com",
     to: email,
-    subject: "Đặt vé thành công",
-    html: `<h1>EventHub xác nhận bạn đã đặt vé thành công</h1>
-          <p>Sự kiện: ${booking.name}</p>
-          <p>Xin chân thành cảm ơn!</p>
+    subject: "Booking confirmation",
+    html: `
+    <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #379777;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+            text-align: left;
+        }
+        .content h2 {
+            font-size: 20px;
+            color: #333333;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555555;
+        }
+        .details {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .details p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #888888;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Booking Confirmation</h1>
+        </div>
+        <div class="content">
+            <h2>Hello, ${booking.mail}</h2>
+            <p>Thank you for booking with EventHub! We are excited to confirm your reservation.</p>
+            <p>Your booking details are as follows:</p>
+            <div class="details">
+                <p><strong>Booking ID:</strong> ${booking.id}</p>
+                <p><strong>Event:</strong> ${event.name}</p>
+         
+<p><strong>Date & Time:</strong> ${booking.start + ' - ' + booking.end}</p>
+          
+<p><strong>Total Amount:</strong> ${amount.toLocaleString('vi-VN')}</p>
+            </div>
+            <p>If you have any questions or need to modify your booking, feel free to contact us at eventHub.support@gmail.com or call us at 0123456789.</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for choosing EventHub. Enjoy your event!</p>
+            <p>&copy; 2024 EventHub. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
     `,
   };
 
@@ -250,12 +352,17 @@ const updateStatusBookingPaid = async (req, res) => {
       result.rows[0].eventId,
       id
     );
+    const event = await db.query(
+      `SELECT e."name", e.id, e."startTime", e."endTime" FROM events e WHERE e.id = $1`,
+      [result.rows[0].eventId]
+    )
+    console.log('Amount: ',vnp_Amount,event);
     const bill = await db.query(
       `INSERT INTO bills ("userId", "bookingId", total, "paymentMethodId", "statusId") 
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [result.rows[0].userId, result.rows[0].id, vnp_Amount, 1, 1]
+      [result.rows[0].userId, result.rows[0].id, vnp_Amount/100, 1, 1]
     );
-    await sendMailBooking(result.rows[0].mail, result.rows[0]);
+    await sendMailBooking(result.rows[0].mail, result.rows[0],event.rows[0],vnp_Amount/100);
     // res.status(200).json(result.rows[0]);
     res.redirect(
       `http://localhost:3000/booking/${result.rows[0].id}/payment-success`

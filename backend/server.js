@@ -65,6 +65,19 @@ const updateEventStatus = async () => {
 
 cron.schedule('*/1 * * * *', updateEventStatus);
 
+const formatDate =  (dateString) => {
+  const date = new Date(dateString);
+
+  // Lấy giờ, phút, ngày, tháng, và năm
+  const hours = String(date.getUTCHours()).padStart(2, '0'); // Lấy giờ và đảm bảo 2 chữ số
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0'); // Lấy phút và đảm bảo 2 chữ số
+  const day = String(date.getUTCDate()).padStart(2, '0'); // Lấy ngày và đảm bảo 2 chữ số
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Lấy tháng và đảm bảo 2 chữ số
+  const year = date.getUTCFullYear(); // Lấy năm
+
+  // Định dạng theo HH:mm DDMMYYYY
+  return `${hours}:${minutes} ${day}/${month}/${year}`;
+}
 cron.schedule('0 0 * * *', async () => {
   try {
     const result = await db.query(`
@@ -82,7 +95,7 @@ cron.schedule('0 0 * * *', async () => {
 
     for (const event of events) {
       const { name, startTime, mail } = event;
-
+      var start = formatDate(startTime)
       const transporter = nodemailer.createTransport({
         service: 'Gmail', 
         auth: {
@@ -95,9 +108,97 @@ cron.schedule('0 0 * * *', async () => {
         from: 'eventhub173@gmail.com',
         to: mail,
         subject: `Reminder: Event "${name}" is happening tomorrow!`,
-        html: `Dear customer,\n\n
-                    This is a reminder that the event "${name}" you registered for will take place tomorrow at ${startTime}.\n\n
-                    We look forward to seeing you there!`,
+        html: `
+        <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #379777;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+            text-align: left;
+        }
+        .content h2 {
+            font-size: 20px;
+            color: #333333;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555555;
+        }
+        .details {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .details p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #888888;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Reminder</h1>
+        </div>
+        <div class="content">
+            <h2>Hello, ${mail}</h2>
+            <p>  This is a reminder that the event "${name}" you registered for will take place tomorrow at ${start}.\n\n
+            We look forward to seeing you there!</p>
+            <p>Your booking details are as follows:</p>
+            <div class="details">
+                <p><strong>Event:</strong> ${name}</p>
+         
+                <p><strong>Date & Time:</strong> ${start}</p>
+          
+            </div>
+            <p>If you have any questions or need to modify your booking, feel free to contact us at eventHub.support@gmail.com or call us at 0123456789.</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for choosing EventHub. Enjoy your event!</p>
+            <p>&copy; 2024 EventHub. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+      `,
       };
     
       await transporter.sendMail(mailOptions);

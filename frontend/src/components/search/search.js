@@ -2,18 +2,42 @@ import styles from './search.module.scss'
 import Button from '../button/button'
 import Select from '../select/select'
 import eventService from '../../services/eventService'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function Search() {
+    const handleChange = async (e) => {
+        console.log(e.target.value);
+        const { name, value } = e.target;
+        setFormData((prevData) => (
+            {
+                ...prevData,
+                [name]: value
+            }
+        ))
+    }
+    const navigate = useNavigate()
+    const [formData,setFormData] = useState({
+        category: '',
+        city: '',
+        name: '',
+    })
+    const handleSearch =  () => {
+        navigate(`/home?categories=${formData.category}&name=${formData.name}`)
+    }
     return (
+        
         <div className={styles.container}>
             <div className={styles.searchInput}>
-                <input placeholder='Sự kiện' />
-                <Button name={'Tìm kiếm'} width={'6em'} borderRadius='5px' />
+                <input placeholder='Sự kiện' name='name' value={formData.name} onChange={handleChange}/>
+                <Button name={'Tìm kiếm'} width={'6em'} borderRadius='5px' onClick={() => handleSearch()}/>
             </div>
             <div className={styles.filter}>
                 <Select
-                    
+                    name={'category'}
+                    value={formData.category}
+                    onChange={handleChange}
                     options={[
                         {
                             value: '',
@@ -36,6 +60,7 @@ export default function Search() {
                             label: 'Sự kiện khác',
                         }
                     ]}
+                    
                 />
                 <Select
                     
