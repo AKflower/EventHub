@@ -57,8 +57,17 @@ export default function ManageEvent() {
     }
     const handleChange = async (e) => {
         console.log(e.target.value);
-        const { name, value } = e.target;
-        
+        var { name, value } = e.target;
+        var strArr = []
+        console.log(value.split('.'));
+        if (name == 'price') strArr = value.split('.');
+        var newValue = ''
+        for (let i = 0; i < strArr.length; i++) {
+            newValue += strArr[i]
+
+        }
+
+        value = parseInt(newValue)
         setFormData((prevData) => (
             {
                 ...prevData,

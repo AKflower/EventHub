@@ -47,7 +47,7 @@ const changePassword = async (req, res) => {
       return res.status(400).json({ error: "Invalid mail or password" });
     }
 
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(oldPassword, user.password);
     if (!match) {
       return res.status(400).json({ error: "Invalid mail or password" });
     }

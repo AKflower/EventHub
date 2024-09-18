@@ -8,6 +8,7 @@ import formatService from '../../services/formatService'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { toast } from 'react-toastify'
 import Modal from '../../components/modal/modal'
+import authService from '../../services/authService'
 
 export default function Profile() {
     const userId = localStorage.getItem('userId')
@@ -22,7 +23,7 @@ export default function Profile() {
         }
     )
     const [formPass, setFormPass] = useState({
-        password: '',
+        oldPassword: '',
         newPassword: '',
         reNewPassword: ''
     })
@@ -39,7 +40,7 @@ export default function Profile() {
     const changePassword = async () => {
         setFormPass(
             {
-                password: '',
+                oldPassword: '',
                 newPassword: '',
                 reNewPassword: ''
             }
@@ -60,6 +61,35 @@ export default function Profile() {
         const res = await userService.updateUser(formData.id, formData)
         fetchUser();
         toast.success('Cập nhật thành công!')
+    }
+    const handleSubmit = async () => {
+        if (!formPass.newPassword || !formPass.oldPassword || !formPass.reNewPassword) {
+            toast.warning('You must fill out all!');
+            return;
+        }
+        else if (formPass.newPassword != formPass.reNewPassword) {
+            toast.warning('Wrong password!');
+            return;
+        }
+        try {
+            const res = await userService.changePassword(formData.id,{...formPass,mail: user.mail})
+            toast.success('Đổi mật khẩu thành công!')
+            setShowModal(false)
+        }
+        catch(err) {
+            toast.error('Failed!')
+        }
+       
+
+    }
+    const handleChangeFomPass = async (e) => {
+        const { name, value } = e.target;
+        setFormPass((prevData) => (
+            {
+                ...prevData,
+                [name]: value
+            }
+        ))
     }
     useEffect(() => {
         if (userId) fetchUser();
@@ -95,11 +125,12 @@ export default function Profile() {
                 <Modal
                     title={'Đổi mật khẩu'}
                     onClose={() => setShowModal(false)}
+                    onSubmit={handleSubmit}
                 >
                     <div className={styles.form}>
-                        <Input label={'Mật khẩu cũ'} type='password' name={'password'} value={formPass.password}  isError={err.errPass}/>
-                        <Input label={'Mật khẩu mới'} type='password' name={'newPassword'} value={formPass.newPassword} isError={err.errNewPass}/>
-                        <Input label={'Xác nhận mật khẩu mới'} type='password' name={'reNewPassword'} value={formPass.reNewPassword} isError={err.errNewPass} />
+                        <Input label={'Mật khẩu cũ'} type='password' name={'oldPassword'} value={formPass.oldPassword}  isError={err.errPass} onChange={handleChangeFomPass}/>
+                        <Input label={'Mật khẩu mới'} type='password' name={'newPassword'} value={formPass.newPassword} isError={err.errNewPass} onChange={handleChangeFomPass}/>
+                        <Input label={'Xác nhận mật khẩu mới'} type='password' name={'reNewPassword'} value={formPass.reNewPassword} isError={err.errNewPass} onChange={handleChangeFomPass}/>
                     </div>
                 </Modal>
             }

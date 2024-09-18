@@ -15,6 +15,7 @@ import Cart from './pages/Cart/cart';
 import Profile from './pages/Profile/profile';
 import Organizer from './pages/Organizer/organizer';
 import 'react-toastify/dist/ReactToastify.css'; 
+import Footer from './components/footer/footer';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
 
 
       </Routes>
+      <Footer />
       <ToastContainer />
     </BrowserRouter>
     </UserProvider>

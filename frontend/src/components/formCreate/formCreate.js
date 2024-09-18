@@ -26,7 +26,8 @@ export default function FormCreate() {
         branch: '',
         street: '',
         startTime: '',
-        endTime: ''
+        endTime: '',
+        categoryId: '',
     })
     function checkEmptyFields(data) {
         for (const key in data) {
@@ -126,8 +127,8 @@ export default function FormCreate() {
             <div className={styles.formGroup}>
                 <Select
                     label={'Thể loại sự kiện'}
-                    name={'category'}
-                    value={formData.category}
+                    name={'categoryId'}
+                    value={formData.categoryId}
                     onChange={handleChange}
                     options={[
                         {
@@ -135,19 +136,19 @@ export default function FormCreate() {
                             label: 'Chọn sự kiện'
                         },
                         {
-                            value: 'Music',
+                            value: '1',
                             label: 'Âm nhạc',
                         },
                         {
-                            value: 'Sport',
+                            value: '4',
                             label: 'Thể thao',
                         },
                         {
-                            value: 'Theater & Art',
+                            value: '2',
                             label: 'Sân khấu & Nghệ thuật',
                         },
                         {
-                            value: 'Others',
+                            value: '3',
                             label: 'Sự kiện khác',
                         }
                     ]}

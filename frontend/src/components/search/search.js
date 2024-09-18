@@ -3,7 +3,7 @@ import Button from '../button/button'
 import Select from '../select/select'
 import eventService from '../../services/eventService'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,useSearchParams } from 'react-router-dom'
 
 
 export default function Search() {
@@ -17,14 +17,17 @@ export default function Search() {
             }
         ))
     }
+    const [searchParams] = useSearchParams();
+    const name = searchParams.get('name');
+    const categories = searchParams.get('categories');
     const navigate = useNavigate()
     const [formData,setFormData] = useState({
-        category: '',
+        categories: categories ? categories : '',
         city: '',
-        name: '',
+        name: name ? name : '',
     })
     const handleSearch =  () => {
-        navigate(`/home?categories=${formData.category}&name=${formData.name}`)
+        window.location.href = `http://localhost:3000/home?categories=${formData.categories}&name=${formData.name}`
     }
     return (
         
@@ -35,8 +38,8 @@ export default function Search() {
             </div>
             <div className={styles.filter}>
                 <Select
-                    name={'category'}
-                    value={formData.category}
+                    name={'categories'}
+                    value={formData.categories}
                     onChange={handleChange}
                     options={[
                         {
@@ -44,19 +47,19 @@ export default function Search() {
                             label: 'Tất cả thể loại',
                         },
                         {
-                            value: 'Music',
+                            value: '1',
                             label: 'Âm nhạc',
                         },
                         {
-                            value: 'Sport',
+                            value: '4',
                             label: 'Thể thao',
                         },
                         {
-                            value: 'Theater & Art',
+                            value: '2',
                             label: 'Sân khấu & Nghệ thuật',
                         },
                         {
-                            value: 'Others',
+                            value: '3',
                             label: 'Sự kiện khác',
                         }
                     ]}

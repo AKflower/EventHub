@@ -16,7 +16,7 @@ export default function EventList({ category, isShort,eventList }) {
             console.log(category);
         }
         else if (category == 'Hot') {
-            const res = await eventService.getTop8EventsByTicketSales();
+            const res = await eventService.getTop8EventsByTicketSales(6);
             var data = []
             if (isShort) {
                 data = await res.filter((item, index) => index <= 2)
@@ -66,11 +66,11 @@ export default function EventList({ category, isShort,eventList }) {
                 return 'Hot'
             case 1:
                 return 'Âm nhạc'
-            case 3:
+            case 4:
                 return 'Thể thao'
             case 2:
                 return 'Sân khấu & Nghệ thuật'
-            case 4:
+            case 3:
                 return 'Sự kiện khác'
             case 'Search':
                 return 'Kết quả tìm kiếm'
@@ -79,8 +79,8 @@ export default function EventList({ category, isShort,eventList }) {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h3>{
-                    convertTitleCategory(category)
+                <h3> {
+                    parseInt(category,10) ?  convertTitleCategory(parseInt(category,10)) : category
                 }</h3>
                 {isShort && <p onClick={() => navigate(`/events/${category}`)} style={{ cursor: 'pointer' }}>Xem thêm</p>}
             </div>

@@ -28,7 +28,7 @@ const getAllUsers = async () => {
 // Hàm thay đổi mật khẩu
 const changePassword = async (id, passwordData) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}/change-password`, passwordData);
+    const response = await axios.patch(`${API_URL}/${id}/change-password`, passwordData);
     return response.data;
   } catch (error) {
     console.error("Change Password Error:", error);

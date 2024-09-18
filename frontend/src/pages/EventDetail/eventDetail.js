@@ -12,6 +12,8 @@ import galleryService from '../../services/galleryService'
 import bookingService from '../../services/bookingService'
 import { useUserContext } from '../../context/UserContext'
 import formatService from '../../services/formatService'
+import { toast } from 'react-toastify'
+
 
 export default function EventDetail() {
     const { eventId } = useParams();
@@ -45,6 +47,11 @@ export default function EventDetail() {
     }, [])
 
     const handleBooking = async () => {
+        if (!sessionInfo)  {
+            
+            navigate(`/login`);
+            return;
+        }
         var ticketInfo = ticketTypes.filter((ticket) => ticket.booked > 0)
         .map((ticket) => ({
             ticketTypeId: ticket.id,
@@ -202,14 +209,15 @@ export default function EventDetail() {
                     ))
                     }
                     <div style={{ padding: '1em' }}>
-                        <Button
+                       <Button
                             name={total ? 'Tiếp tục - ' + formatPrice(total) + ' >>' : 'Vui lòng chọn vé'}
                             color={total ? '#379777' : 'silver'}
                             onClick={() => {
                                 if (total > 0) {
                                     handleBooking()
                                 }
-                            }} /></div>
+                            }} />
+                    </div>
                 </div>
             </div>
         </div>

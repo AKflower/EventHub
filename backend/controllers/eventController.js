@@ -276,6 +276,7 @@ const searchEvents = async (req, res) => {
 
 const getTop8EventsByTicketSales = async (req, res) => {
   const { quantity } = req.params;
+ 
   try {
     const result = await db.query(`
       SELECT 

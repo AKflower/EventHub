@@ -110,7 +110,7 @@ export default function FormUpdate({event,save,onFetch}) {
                 <Select
                     label={'Thể loại sự kiện'}
                     name={'category'}
-                    value={formData.category}
+                    value={formData.categoryId}
                     onChange={handleChange}  isDisabled={event.statusId!=1}
                     options={[
                         {
@@ -118,19 +118,19 @@ export default function FormUpdate({event,save,onFetch}) {
                             label: 'Chọn sự kiện'
                         },
                         {
-                            value: 'Music',
+                            value: '1',
                             label: 'Âm nhạc',
                         },
                         {
-                            value: 'Sport',
+                            value: '4',
                             label: 'Thể thao',
                         },
                         {
-                            value: 'Theaters & Art',
+                            value: '2',
                             label: 'Sân khấu & Nghệ thuật',
                         },
                         {
-                            value: 'Others',
+                            value: '3',
                             label: 'Sự kiện khác',
                         }
                     ]}

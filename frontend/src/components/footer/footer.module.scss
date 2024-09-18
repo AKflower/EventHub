@@ -1,0 +1,22 @@
+.container{
+    width: 100%;
+    background-color: #6b6b6b;
+    min-height: 20em;
+    display: flex;
+    flex-direction: column;
+    .slogan{
+        font-style: italic;
+        text-align: center;
+    }
+    .info {
+        flex-grow: 1;
+        display: flex;
+        gap: 1em;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        
+        color: #fff;
+        
+    }
+}

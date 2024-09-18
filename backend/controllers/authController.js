@@ -25,11 +25,12 @@ const sendVerificationEmail = async (email, verificationLink) => {
 
 const register = async (req, res) => {
   const { password, fullName, phone, birth, gender, mail } = req.body;
-
+  console.log(mail);
   try {
     const userCheck = await db.query("SELECT * FROM users WHERE mail = $1", [
       mail,
     ]);
+    console.log(userCheck.rows);
     if (userCheck.rows.length > 0) {
       return res.status(400).json({ error: "Mail already exists" });
     }
@@ -39,8 +40,8 @@ const register = async (req, res) => {
     const emailVerificationToken = crypto.randomBytes(32).toString("hex");
 
     const result = await db.query(
-      `INSERT INTO users ( password, "fullName", phone, birth, gender, mail, emailVerificationToken) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      `INSERT INTO users ( password, "fullName", phone, birth, gender, mail) 
+             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [
         hashedPassword,
         fullName,
@@ -48,7 +49,6 @@ const register = async (req, res) => {
         birth,
         gender,
         mail,
-        emailVerificationToken,
       ]
     );
 

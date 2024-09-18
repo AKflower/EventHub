@@ -20,6 +20,7 @@ export default function Home() {
         console.log('Test',res);
     }
     useEffect(() => {
+        if (name || categories)
         handleSearch()
     }, [name, categories])
     return (
@@ -30,14 +31,21 @@ export default function Home() {
             <>
                 <EventList category={'Hot'} isShort={true} />
                 <EventList category={1} isShort={true} />
-                <EventList category={3} isShort={true} />
-                <EventList category={2} isShort={true} />
                 <EventList category={4} isShort={true} />
+                <EventList category={2} isShort={true} />
+                <EventList category={3} isShort={true} />
+
             </>
             }
             {
                 searchRes && 
                 <EventList category={'Search'} isShort={false} eventList={searchRes}/>
+            }
+            {
+                (searchRes && searchRes.length == 0) && 
+                <h1 style={{color: 'white',textAlign:'center'}}>
+                    Không có sự kiện nào trùng khớp!
+                </h1>
             }
 
         </div>

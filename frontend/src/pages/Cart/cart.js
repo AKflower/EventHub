@@ -78,10 +78,7 @@ export default function Cart () {
                     <div className={styles.info}>
                         {sessionInfo.fullName}
                     </div>
-                    <div className={styles.statistic}>
-                        <Ptitle title={'Tổng vé đã đặt'}/>
-                        <Ptitle title={'Tổng vé đã hủy'}/>
-                    </div>
+                  
                     <div className={styles.options}>
                         <div className={styles.option} onClick={() => navigate('/profile')}>
                             <PersonIcon /> Thông tin cá nhân
