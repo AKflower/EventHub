@@ -59,8 +59,10 @@ export default function ManageEvent() {
         console.log(e.target.value);
         var { name, value } = e.target;
         var strArr = []
+        console.log('Test',name,value);
         console.log(value.split('.'));
-        if (name == 'price') strArr = value.split('.');
+        if (name == 'price')  {
+            strArr = value.split('.');
         var newValue = ''
         for (let i = 0; i < strArr.length; i++) {
             newValue += strArr[i]
@@ -68,6 +70,7 @@ export default function ManageEvent() {
         }
 
         value = parseInt(newValue)
+        } 
         setFormData((prevData) => (
             {
                 ...prevData,

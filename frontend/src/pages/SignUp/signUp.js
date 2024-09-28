@@ -88,7 +88,7 @@ export default function SignUp () {
                 </div>
                 <div className={styles.footer}>
                     <span>Join us before? </span>
-                    <Link to={'/sign-up'}>Login now</Link>
+                    <Link to={'/login'}>Login now</Link>
                 </div>
             </div>
         </div>
