@@ -1,12 +1,12 @@
 import axios from "axios";
 
 // Thiết lập URL cơ sở cho tất cả các yêu cầu API
-const API_URL = "http://localhost:3001/api/auth";
+const REACT_APP_API_URL = `${process.env.REACT_APP_API_URL}/api/auth`;
 
 // Hàm đăng ký
 const register = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, userData);
+    const response = await axios.post(`${REACT_APP_API_URL}/register`, userData);
     return response.data;
   } catch (error) {
     console.error("Registration Error:", error);
@@ -17,7 +17,7 @@ const register = async (userData) => {
 // Hàm đăng nhập
 const login = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, userData);
+    const response = await axios.post(`${REACT_APP_API_URL}/login`, userData);
     return response.data;
   } catch (error) {
     console.error("Login Error:", error);
@@ -28,7 +28,7 @@ const login = async (userData) => {
 // Hàm đăng xuất
 const logout = async () => {
   try {
-    const response = await axios.post(`${API_URL}/logout`);
+    const response = await axios.post(`${REACT_APP_API_URL}/logout`);
     return response.data;
   } catch (error) {
     console.error("Logout Error:", error);

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3001/api/events"; // Base URL cho API của bạn
+const API_BASE_URL = `${process.env.REACT_APP_API_URL}/api/events`; // Base URL cho API của bạn
 
 // Tạo sự kiện mới
 const createEvent = async (eventData) => {
@@ -63,7 +63,7 @@ const searchEvents = async ({ name, categories, isFree, city }) => {
   console.log('name: ',name,categories );
   try {
     const params = {};
-    
+
     if (name) {
       params.name = name;
     }
@@ -85,7 +85,7 @@ const searchEvents = async ({ name, categories, isFree, city }) => {
     return response.data;
   } catch (error) {
     console.error('Error searching events:', error);
-    throw error; 
+    throw error;
   }
 };
 

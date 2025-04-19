@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api/tickettypes'; // Cập nhật URL API nếu cần
+const REACT_APP_API_URL = `${process.env.REACT_APP_API_URL}/api/tickettypes`; // Cập nhật URL API nếu cần
 
 const ticketTypeService = {
   createTicketType: async (ticketTypeData) => {
     try {
-      const response = await axios.post(API_URL, ticketTypeData);
+      const response = await axios.post(REACT_APP_API_URL, ticketTypeData);
       return response.data;
     } catch (error) {
       console.error('Error creating ticket type:', error);
@@ -15,7 +15,7 @@ const ticketTypeService = {
 
   getAllTicketTypes: async () => {
     try {
-      const response = await axios.get(API_URL);
+      const response = await axios.get(REACT_APP_API_URL);
       return response.data;
     } catch (error) {
       console.error('Error fetching all ticket types:', error);
@@ -25,7 +25,7 @@ const ticketTypeService = {
 
   getTicketTypeById: async (ticketTypeId) => {
     try {
-      const response = await axios.get(`${API_URL}/${ticketTypeId}`);
+      const response = await axios.get(`${REACT_APP_API_URL}/${ticketTypeId}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching ticket type with ID ${ticketTypeId}:`, error);
@@ -35,7 +35,7 @@ const ticketTypeService = {
 
   getTicketTypesByEventId: async (eventId) => {
     try {
-      const response = await axios.get(`${API_URL}/event/${eventId}`);
+      const response = await axios.get(`${REACT_APP_API_URL}/event/${eventId}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching ticket types for event ID ${eventId}:`, error);
@@ -45,7 +45,7 @@ const ticketTypeService = {
 
   updateTicketType: async (ticketTypeId, updatedData) => {
     try {
-      const response = await axios.put(`${API_URL}/${ticketTypeId}`, updatedData);
+      const response = await axios.put(`${REACT_APP_API_URL}/${ticketTypeId}`, updatedData);
       return response.data;
     } catch (error) {
       console.error(`Error updating ticket type with ID ${ticketTypeId}:`, error);
@@ -55,7 +55,7 @@ const ticketTypeService = {
 
   softDeleteTicketType: async (ticketTypeId) => {
     try {
-      const response = await axios.patch(`${API_URL}/${ticketTypeId}/soft-delete`);
+      const response = await axios.patch(`${REACT_APP_API_URL}/${ticketTypeId}/soft-delete`);
       return response.data;
     } catch (error) {
       console.error(`Error soft-deleting ticket type with ID ${ticketTypeId}:`, error);
@@ -65,7 +65,7 @@ const ticketTypeService = {
 
   deleteTicketType: async (ticketTypeId) => {
     try {
-      const response = await axios.delete(`${API_URL}/${ticketTypeId}`);
+      const response = await axios.delete(`${REACT_APP_API_URL}/${ticketTypeId}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting ticket type with ID ${ticketTypeId}:`, error);

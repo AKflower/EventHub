@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api/galleries'; // Cập nhật URL API nếu cần
+const REACT_APP_API_URL = `${process.env.REACT_APP_API_URL}/api/galleries`; // Cập nhật URL API nếu cần
 
 const galleryService = {
   addImage: async (formData) => {
     try {
-      const response = await axios.post(`${API_URL}`, formData, {
+      const response = await axios.post(`${REACT_APP_API_URL}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -19,7 +19,7 @@ const galleryService = {
 
   getImageById: async (imageId) => {
     try {
-      const response = await axios.get(`${API_URL}/${imageId}`, {
+      const response = await axios.get(`${REACT_APP_API_URL}/${imageId}`, {
         responseType: 'blob', // Để lấy dữ liệu nhị phân (image)
       });
       return response.data;
@@ -30,7 +30,7 @@ const galleryService = {
   },
 
   getLinkImage:  (imageId) => {
-    return `${API_URL}/${imageId}`
+    return `${REACT_APP_API_URL}/${imageId}`
   }
 };
 

@@ -1,12 +1,12 @@
 import axios from "axios";
 
 // Thiết lập URL cơ sở cho tất cả các yêu cầu API
-const API_URL = "http://localhost:3001/api/users"; // Cập nhật URL này theo backend của bạn
+const REACT_APP_API_URL = `${process.env.REACT_APP_API_URL}/api/users`; // Cập nhật URL này theo backend của bạn
 
 // Hàm tạo user
 const createUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}`, userData);
+    const response = await axios.post(`${REACT_APP_API_URL}`, userData);
     return response.data;
   } catch (error) {
     console.error("Create User Error:", error);
@@ -17,7 +17,7 @@ const createUser = async (userData) => {
 // Hàm lấy tất cả user
 const getAllUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}`);
+    const response = await axios.get(`${REACT_APP_API_URL}`);
     return response.data;
   } catch (error) {
     console.error("Get All Users Error:", error);
@@ -28,7 +28,7 @@ const getAllUsers = async () => {
 // Hàm thay đổi mật khẩu
 const changePassword = async (id, passwordData) => {
   try {
-    const response = await axios.patch(`${API_URL}/${id}/change-password`, passwordData);
+    const response = await axios.patch(`${REACT_APP_API_URL}/${id}/change-password`, passwordData);
     return response.data;
   } catch (error) {
     console.error("Change Password Error:", error);
@@ -39,7 +39,7 @@ const changePassword = async (id, passwordData) => {
 // Hàm lấy thông tin user theo ID
 const getUserById = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/${id}`);
+    const response = await axios.get(`${REACT_APP_API_URL}/${id}`);
     return response.data;
   } catch (error) {
     console.error("Get User By ID Error:", error);
@@ -50,7 +50,7 @@ const getUserById = async (id) => {
 // Hàm cập nhật thông tin user
 const updateUser = async (id, userData) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}`, userData);
+    const response = await axios.put(`${REACT_APP_API_URL}/${id}`, userData);
     return response.data;
   } catch (error) {
     console.error("Update User Error:", error);
@@ -61,7 +61,7 @@ const updateUser = async (id, userData) => {
 // Hàm soft delete user
 const softDeleteUser = async (id) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}/soft-delete`);
+    const response = await axios.put(`${REACT_APP_API_URL}/${id}/soft-delete`);
     return response.data;
   } catch (error) {
     console.error("Soft Delete User Error:", error);
@@ -72,7 +72,7 @@ const softDeleteUser = async (id) => {
 // Hàm xóa user hoàn toàn
 const deleteUser = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/${id}`);
+    const response = await axios.delete(`${REACT_APP_API_URL}/${id}`);
     return response.data;
   } catch (error) {
     console.error("Delete User Error:", error);

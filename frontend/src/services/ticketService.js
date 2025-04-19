@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api/tickets'; // Cập nhật URL API nếu cần
+const REACT_APP_API_URL = `${process.env.REACT_APP_API_URL}/api/tickets`; // Cập nhật URL API nếu cần
 
 const ticketService = {
   createTicket: async (ticketData) => {
     try {
-      const response = await axios.post(API_URL, ticketData);
+      const response = await axios.post(REACT_APP_API_URL, ticketData);
       return response.data;
     } catch (error) {
       console.error('Error creating ticket:', error);
@@ -15,7 +15,7 @@ const ticketService = {
 
   getAllTickets: async () => {
     try {
-      const response = await axios.get(API_URL);
+      const response = await axios.get(REACT_APP_API_URL);
       return response.data;
     } catch (error) {
       console.error('Error fetching all tickets:', error);
@@ -25,7 +25,7 @@ const ticketService = {
 
   getTicketById: async (ticketId) => {
     try {
-      const response = await axios.get(`${API_URL}/${ticketId}`);
+      const response = await axios.get(`${REACT_APP_API_URL}/${ticketId}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching ticket with ID ${ticketId}:`, error);
@@ -35,7 +35,7 @@ const ticketService = {
 
   updateTicket: async (ticketId, updatedData) => {
     try {
-      const response = await axios.put(`${API_URL}/${ticketId}`, updatedData);
+      const response = await axios.put(`${REACT_APP_API_URL}/${ticketId}`, updatedData);
       return response.data;
     } catch (error) {
       console.error(`Error updating ticket with ID ${ticketId}:`, error);
@@ -45,7 +45,7 @@ const ticketService = {
 
   softDeleteTicket: async (ticketId) => {
     try {
-      const response = await axios.patch(`${API_URL}/${ticketId}/soft-delete`);
+      const response = await axios.patch(`${REACT_APP_API_URL}/${ticketId}/soft-delete`);
       return response.data;
     } catch (error) {
       console.error(`Error soft-deleting ticket with ID ${ticketId}:`, error);
@@ -55,7 +55,7 @@ const ticketService = {
 
   deleteTicket: async (ticketId) => {
     try {
-      const response = await axios.delete(`${API_URL}/${ticketId}`);
+      const response = await axios.delete(`${REACT_APP_API_URL}/${ticketId}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting ticket with ID ${ticketId}:`, error);
