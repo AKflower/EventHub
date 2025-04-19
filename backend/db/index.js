@@ -7,10 +7,13 @@ const client = new Client({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_DATABASE,
+  // ssl: {
+  //   rejectUnauthorized: true,
+  //   ca: process.env.DB_SSL_CA,
+  // },
   ssl: {
-    rejectUnauthorized: true,
-    ca: process.env.DB_SSL_CA,
-  },
+    rejectUnauthorized: false // nếu không có CA cert
+  }
 });
 
 client.connect()
