@@ -14,7 +14,7 @@ import Payment from './pages/Payment/payment';
 import Cart from './pages/Cart/cart';
 import Profile from './pages/Profile/profile';
 import Organizer from './pages/Organizer/organizer';
-import 'react-toastify/dist/ReactToastify.css'; 
+import 'react-toastify/dist/ReactToastify.css';
 import Footer from './components/footer/footer';
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path='/sign-up' element={<SignUp />}/>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/events/detail/:eventId" element={<EventDetail />} />
         <Route path="/events/:category" element={<Events />} />
         <Route path='/booking/:bookingId' element={<Booking />}/>
