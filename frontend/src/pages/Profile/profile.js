@@ -79,7 +79,7 @@ export default function Profile() {
         catch(err) {
             toast.error('Failed!')
         }
-       
+
 
     }
     const handleChangeFomPass = async (e) => {
@@ -93,15 +93,15 @@ export default function Profile() {
     }
     useEffect(() => {
         if (userId) fetchUser();
-        else navigate('/home');
+        else navigate('/');
     }, [])
-    
+
     const gender = [{ value: 'male', label: 'Nam' }, { value: 'female', label: 'Nữ' }, { value: 'other', label: 'Khác' }]
     if (!formData) return;
     return (
         <div className={styles.container}>
             <div className={styles.profile}>
-                <div className={styles.back} onClick={() => navigate('/home')}><ArrowBackIcon /></div>
+                <div className={styles.back} onClick={() => navigate('/')}><ArrowBackIcon /></div>
                 <h1>Thông tin cá nhân</h1>
                 <p>Cung cấp thông tin chính xác sẽ hỗ trợ bạn trong quá trình mua vé, hoặc khi cần xác thực vé</p>
                 <Input label={'Họ tên'} name={'fullName'} value={formData.fullName} onChange={handleChange} />

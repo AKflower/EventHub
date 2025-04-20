@@ -13,9 +13,9 @@ export default function Login () {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-        if (token) navigate('/home');
+        if (token) navigate('/');
     },[])
-   
+
     const [formData,setFormData] = useState({
         mail: '',
         password: ''
@@ -35,14 +35,14 @@ export default function Login () {
             const res = await authService.login(formData);
             localStorage.setItem('token',res.token)
             localStorage.setItem('userId',res.userId)
-            navigate('/home')
+            navigate('/')
         }
         catch (err) {
             console.error(err)
         }
-        
+
     }
-    
+
     return (
         <div className={styles.container}>
             <div className={styles.cover}></div>
@@ -52,7 +52,7 @@ export default function Login () {
                     <Input label={'Email'} color='#F4CE14' name={'mail'} value={formData.mail} onChange={handleChange}/>
                     <Input label={'Password'} color='#F4CE14' name={'password'} value={formData.password} onChange={handleChange} type='password'/>
                     <div style={{textAlign:'right',padding:'1em 0'}}><Link to={'/forgot-passwrod'}>Forgot Password</Link></div>
-                    
+
                     <Button name={'Đăng nhập'} color='#F4CE14' onClick={() => handleLogin()}/>
                 </div>
                 <div className='divider'>

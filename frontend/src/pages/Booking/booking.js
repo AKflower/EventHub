@@ -24,7 +24,7 @@ export default function Booking() {
     })
     const fetchBooking = async () => {
         const res = await bookingService.getBookingById(bookingId)
-        if (res.userId !=sessionInfo.id) navigate('/home'); // Block another user access;
+        if (res.userId !=sessionInfo.id) navigate('/'); // Block another user access;
         const eventData = await eventService.getEventById(res.eventId);
         setEvent(eventData)
         const ticketTypesData = await ticketTypeService.getTicketTypesByEventId(res.eventId);
@@ -51,7 +51,7 @@ export default function Booking() {
         if (!sessionInfo) return;
         fetchBooking()
     }, [bookingId,sessionInfo])
-    
+
     const formatPrice = (num) => {
         return num.toLocaleString('vi-VN');
     }

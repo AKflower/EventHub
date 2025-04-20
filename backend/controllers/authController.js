@@ -1,4 +1,4 @@
-const db = require("../db"); 
+const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
@@ -6,10 +6,10 @@ const nodemailer = require("nodemailer");
 
 const sendVerificationEmail = async (email, verificationLink) => {
   const transporter = nodemailer.createTransport({
-    service: 'Gmail', 
+    service: 'Gmail',
     auth: {
-      user: 'eventhub173@gmail.com', 
-      pass: 'jprz kvkb ncra wflf',  
+      user: 'eventhub173@gmail.com',
+      pass: 'jprz kvkb ncra wflf',
     },
   });
 
@@ -40,7 +40,7 @@ const register = async (req, res) => {
     const emailVerificationToken = crypto.randomBytes(32).toString("hex");
 
     const result = await db.query(
-      `INSERT INTO users ( password, "fullName", phone, birth, gender, mail) 
+      `INSERT INTO users ( password, "fullName", phone, birth, gender, mail)
              VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [
         hashedPassword,
@@ -67,7 +67,7 @@ const verifyEmail = async (req, res) => {
 
   try {
     const result = await db.query(
-      `UPDATE users 
+      `UPDATE users
        SET isEmailVerified = TRUE, emailVerificationToken = NULL
        WHERE emailVerificationToken = $1
        RETURNING *`,
@@ -112,6 +112,7 @@ const login = async (req, res) => {
 
     res.json({ message: "Login successful", token,userId: user.id });
   } catch (err) {
+    console.log(err)
     console.error(err);
     res.status(500).send("Internal Server Error");
   }
