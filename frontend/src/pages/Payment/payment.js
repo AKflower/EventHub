@@ -38,8 +38,8 @@ export default function Payment({ status = 0 }) {
     const [ticketTypes, setTicketTypes] = useState([])
     const fetchBooking = async () => {
         const res = await bookingService.getBookingById(bookingId)
-        if (res.userId != sessionInfo.id) navigate('/home'); // Block another user access;
-        if (res.statusId!=3 && status==1) navigate('/home');
+        if (res.userId != sessionInfo.id) navigate('/'); // Block another user access;
+        if (res.statusId!=3 && status==1) navigate('/');
         const eventData = await eventService.getEventById(res.eventId);
         setEvent(eventData)
         const ticketTypesData = await ticketTypeService.getTicketTypesByEventId(res.eventId);
@@ -64,7 +64,7 @@ export default function Payment({ status = 0 }) {
     }
     useEffect(() => {
         if (!sessionInfo) return;
-      
+
         fetchBooking()
     }, [bookingId, sessionInfo])
     const formatPrice = (num) => {
@@ -108,7 +108,7 @@ export default function Payment({ status = 0 }) {
                         <div className='d-flex x-center'>
                            <img src={paymentSuccess} style={{width:'20em', borderRadius:'50%'}}/>
                         </div>
-                        <div className='d-flex x-center' style={{fontFamily:'Londrina Solid',fontSize:'2em'}}><span style={{color:'#379777' }}>Event</span><span style={{color:'#000'}}>Hub</span></div>  
+                        <div className='d-flex x-center' style={{fontFamily:'Londrina Solid',fontSize:'2em'}}><span style={{color:'#379777' }}>Event</span><span style={{color:'#000'}}>Hub</span></div>
                         <div className='d-flex x-center y-center'>xin chân thành cảm ơn bạn vì đã sử dụng dịch vụ của chúng tôi.</div>
                         <div className='d-flex x-center' style={{ padding: '1em 0' }}><Button name={'Xem vé đã mua'} width={'15em'} color='#379777'  onClick={() => navigate('/my-tickets')}/></div>
 
