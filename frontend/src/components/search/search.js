@@ -27,10 +27,10 @@ export default function Search() {
         name: name ? name : '',
     })
     const handleSearch =  () => {
-        window.location.href = `http://localhost:3000/home?categories=${formData.categories}&name=${formData.name}`
+        window.location.href = `http://localhost:3000/?categories=${formData.categories}&name=${formData.name}`
     }
     return (
-        
+
         <div className={styles.container}>
             <div className={styles.searchInput}>
                 <input placeholder='Sự kiện' name='name' value={formData.name} onChange={handleChange}/>
@@ -63,10 +63,10 @@ export default function Search() {
                             label: 'Sự kiện khác',
                         }
                     ]}
-                    
+
                 />
                 <Select
-                    
+
                     options={[
                         {
                             value: 0,
@@ -92,7 +92,7 @@ export default function Search() {
                     ]}
                 />
                 <Select
-                    
+
                 options={[
                     {
                         value: 0,

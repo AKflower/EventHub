@@ -70,7 +70,7 @@ export default function ManageEvent() {
         }
 
         value = parseInt(newValue)
-        } 
+        }
         setFormData((prevData) => (
             {
                 ...prevData,
@@ -100,7 +100,7 @@ export default function ManageEvent() {
         const event = await eventService.createEvent({...formData, coverImg: res.id});
         toast.success('Tạo thành công!');
         setIsSaving(false)
-        
+
     }
     const handleBack = async () => {
         fetchEvents()
@@ -120,11 +120,11 @@ export default function ManageEvent() {
     const handleNewTicket = async () => {
         setShowNewTicketModal(true);
         setFormData({
-            
+
             name: "",
             description: "",
             eventId: "",
-            price: 0,   
+            price: 0,
             eventId: eventSelected.id,
             total: 1,
             minBuy: 1,
@@ -181,6 +181,7 @@ export default function ManageEvent() {
     };
     const fetchEvents = async () => {
         const res = await eventService.getEventsByCreatedById(userId)
+        console.log(res)
         setEvents(res);
     }
     const handleEdit = (event) => {
@@ -205,7 +206,7 @@ export default function ManageEvent() {
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
                     <th></th>
-                
+
                 </tr>
             </thead>
             <tbody>
@@ -222,51 +223,51 @@ export default function ManageEvent() {
                         </td>
                     </tr>
                 ))}
-                
+
             </tbody>
         </table>}
         {
-            showTicketModal && 
-            <Modal 
+            showTicketModal &&
+            <Modal
                 title={'Cập nhật loại vé'}
                 onClose={() => {
                     setShowTicketModal(false)
-                    
+
                 }}
                 onSubmit={() => handleEditTicketSubmit()}
             >
             <div style={{ maxHeight: '30em', overflow: 'auto' }}>
                 <Input label={'Tên loại vé'} name={'name'} value={formData.name} onChange={handleChange}/>
                 <div className='formGroup2'>
-                  
+
                     <Input label={'Giá tiền'} name={'price'} value={formatService.formatPrice(parseInt(formData.price))} onChange={handleChange}/>
                     <Input label={'Tổng số vé'} type='number' name={'total'} value={formData.total} onChange={handleChange}/>
                 </div>
                 <Input label={'Mô tả'} isTextArea={true} name={'description'} value={formData.description} onChange={handleChange}/>
             </div>
-          
+
             </Modal>
         }
         {
-            showNewTicketModal && 
-            <Modal 
+            showNewTicketModal &&
+            <Modal
                 title={'Tạo vé mới'}
                 onClose={() => {
                     setShowNewTicketModal(false)
-                    
+
                 }}
                 onSubmit={() => handleNewTicketSubmit()}
             >
             <div style={{ maxHeight: '30em', overflow: 'auto' }}>
                 <Input label={'Tên loại vé'} name={'name'} value={formData.name} onChange={handleChange}/>
                 <div className='formGroup2'>
-                  
+
                     <Input label={'Giá tiền'} name={'price'} value={formatService.formatPrice(parseInt(formData.price,10))} onChange={handleChange}/>
                     <Input label={'Tổng số vé'} type='number' name={'total'} value={formData.total} onChange={handleChange}/>
                 </div>
                 <Input label={'Mô tả'} isTextArea={true} name={'description'} value={formData.description} onChange={handleChange}/>
             </div>
-          
+
             </Modal>
         }
         {ticketTypes &&
@@ -283,7 +284,7 @@ export default function ManageEvent() {
                     </div>
                     {!eventSelected.isActive && <div>
                         <Button name={'Mở bán vé'} color={ticketTypes.length==0 ? 'silver' : ''} onClick={() => {
-             
+
                         if (ticketTypes.length==0) toast.warning('Phải có ít nhất 1 loại vé!');
                         else   handleActive()
                         }}/>
@@ -301,8 +302,8 @@ export default function ManageEvent() {
                     <th>Mô tả</th>
                     <th>Tổng số vé</th>
                     <th>Đã bán</th>
-                  
-                
+
+
                 </tr>
             </thead>
             <tbody>
@@ -310,11 +311,11 @@ export default function ManageEvent() {
                     <tr onClick={() => handleEditTicket(ticketType)}>
                         <td>{ticketType.name}</td>
                         <td>{formatService.formatPrice(parseInt(ticketType.price,10))}</td>
-                       
+
                         <td>{ticketType.description}</td>
                         <td>{ticketType.total}</td>
                         <td>{(ticketType.total-ticketType.available)}</td>
-                       
+
                     </tr>
                 ))}
             </tbody>
@@ -324,11 +325,11 @@ export default function ManageEvent() {
 
         </>
         }
-        
-        
+
+
         {
-            showModal && 
-            <Modal 
+            showModal &&
+            <Modal
                 title={'Cập nhật thông tin'}
                 onClose={() => {
                     setShowModal(false)
@@ -339,7 +340,7 @@ export default function ManageEvent() {
             <div style={{ maxHeight: '30em', overflow: 'auto' }}>
             <FormUpdate event={eventSelected} save={save} onFetch={() => handleFetch()}/>
             </div>
-          
+
             </Modal>
         }
         </div>

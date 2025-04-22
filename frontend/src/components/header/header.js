@@ -11,7 +11,7 @@ import EventIcon from '@mui/icons-material/Event';
 export default function Header () {
     const navigate = useNavigate()
     const location = useLocation()
-    
+
     const path = location.pathname;
     const userId = localStorage.getItem('userId')
 
@@ -23,13 +23,13 @@ export default function Header () {
     useEffect(() => {
        if (userId) fetchSession();
     },[userId])
-    
+
     if (path=='/login' || path=='/sign-up' || path=='/profile') return;
     return (
         <div className={styles.container}>
-            <div style={{fontFamily:'Londrina Solid',fontSize:'2em',cursor:'pointer'}} onClick={() => window.location.href = `http://localhost:3000/home` }><span style={{color:'#379777' }}>Event</span><span style={{color:'#000'}}>Hub</span> </div>
+            <div style={{fontFamily:'Londrina Solid',fontSize:'2em',cursor:'pointer'}} onClick={() => window.location.href = `http://localhost:3000` }><span style={{color:'#379777' }}>Event</span><span style={{color:'#000'}}>Hub</span> </div>
             <div className={styles.options}>
-           
+
             {
                 !sessionInfo ?
                 <Button name={'Đăng nhập | Đăng ký'} borderRadius='50px' width={'15em'} color='#379777' onClick={() => navigate('/login')}/>
@@ -41,12 +41,12 @@ export default function Header () {
                     <span style={{cursor:'pointer'}} onClick={() => {
                         localStorage.removeItem('token');
                         localStorage.removeItem('userId');
-                        window.location.href= 'http://localhost:3000/home';
+                        window.location.href= 'http://localhost:3000';
                     }}><LogoutIcon /></span>
                 </div>
             }
-            
-                
+
+
             </div>
         </div>
     )

@@ -42,8 +42,10 @@ const getEventsByCreatedById = async (createdById) => {
     );
     return response.data;
   } catch (error) {
+
     console.error("Error fetching event by ID:", error);
-    throw error;
+    return []
+    // throw error;
   }
 };
 

@@ -4,7 +4,7 @@ const port = 3001;
 const cors = require("cors");
 const db = require("./db");
 const cron = require("node-cron");
-const moment = require('moment')
+const moment = require("moment");
 const nodemailer = require("nodemailer");
 
 const userRoutes = require("./routes/userRoutes");
@@ -15,7 +15,8 @@ const ticketRoutes = require("./routes/ticketRoutes");
 const authRoutes = require("./routes/authRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const galleryRoutes = require("./routes/galleryRoutes");
-const billRoutes = require('./routes/billRoutes');
+const billRoutes = require("./routes/billRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 cron.schedule("* * * * *", async () => {
   try {
@@ -45,17 +46,20 @@ const updateEventStatus = async () => {
       let newStatusId = event.statusId;
 
       if (now.isBetween(event.startTime, event.endTime)) {
-        newStatusId = 2;  
+        newStatusId = 2;
       } else if (now.isAfter(event.endTime)) {
-        newStatusId = 3;  
+        newStatusId = 3;
       }
 
       if (newStatusId !== event.statusId) {
-        await db.query(`
+        await db.query(
+          `
           UPDATE events
           SET "statusId" = $1
           WHERE id = $2;
-        `, [newStatusId, event.id]);
+        `,
+          [newStatusId, event.id]
+        );
       }
     }
   } catch (err) {
@@ -63,22 +67,22 @@ const updateEventStatus = async () => {
   }
 };
 
-cron.schedule('*/1 * * * *', updateEventStatus);
+cron.schedule("*/1 * * * *", updateEventStatus);
 
-const formatDate =  (dateString) => {
+const formatDate = (dateString) => {
   const date = new Date(dateString);
 
   // Lấy giờ, phút, ngày, tháng, và năm
-  const hours = String(date.getUTCHours()).padStart(2, '0'); // Lấy giờ và đảm bảo 2 chữ số
-  const minutes = String(date.getUTCMinutes()).padStart(2, '0'); // Lấy phút và đảm bảo 2 chữ số
-  const day = String(date.getUTCDate()).padStart(2, '0'); // Lấy ngày và đảm bảo 2 chữ số
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Lấy tháng và đảm bảo 2 chữ số
+  const hours = String(date.getUTCHours()).padStart(2, "0"); // Lấy giờ và đảm bảo 2 chữ số
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0"); // Lấy phút và đảm bảo 2 chữ số
+  const day = String(date.getUTCDate()).padStart(2, "0"); // Lấy ngày và đảm bảo 2 chữ số
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Lấy tháng và đảm bảo 2 chữ số
   const year = date.getUTCFullYear(); // Lấy năm
 
   // Định dạng theo HH:mm DDMMYYYY
   return `${hours}:${minutes} ${day}/${month}/${year}`;
-}
-cron.schedule('0 0 * * *', async () => {
+};
+cron.schedule("0 0 * * *", async () => {
   try {
     const result = await db.query(`
       SELECT e.name, e."startTime", b.mail
@@ -95,17 +99,17 @@ cron.schedule('0 0 * * *', async () => {
 
     for (const event of events) {
       const { name, startTime, mail } = event;
-      var start = formatDate(startTime)
+      var start = formatDate(startTime);
       const transporter = nodemailer.createTransport({
-        service: 'Gmail', 
+        service: "Gmail",
         auth: {
-          user: 'eventhub173@gmail.com', 
-          pass: 'jprz kvkb ncra wflf',  
+          user: "eventhub173@gmail.com",
+          pass: "jprz kvkb ncra wflf",
         },
       });
-    
+
       const mailOptions = {
-        from: 'eventhub173@gmail.com',
+        from: "eventhub173@gmail.com",
         to: mail,
         subject: `Reminder: Event "${name}" is happening tomorrow!`,
         html: `
@@ -200,13 +204,13 @@ cron.schedule('0 0 * * *', async () => {
 </html>
       `,
       };
-    
+
       await transporter.sendMail(mailOptions);
     }
 
-    console.log('Emails sent successfully');
+    console.log("Emails sent successfully");
   } catch (err) {
-    console.error('Error sending event reminders:', err);
+    console.error("Error sending event reminders:", err);
   }
 });
 
@@ -221,7 +225,8 @@ app.use("/api", ticketRoutes);
 app.use("/api", authRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", galleryRoutes);
-app.use('/api', billRoutes);
+app.use("/api", billRoutes);
+app.use("/api", adminRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
