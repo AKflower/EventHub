@@ -38,11 +38,11 @@ export default function Home() {
             </>
             }
             {
-                searchRes && 
+                searchRes &&
                 <EventList category={'Search'} isShort={false} eventList={searchRes}/>
             }
             {
-                (searchRes && searchRes.length == 0) && 
+                (searchRes && searchRes.length == 0) &&
                 <h1 style={{color: 'white',textAlign:'center'}}>
                     Không có sự kiện nào trùng khớp!
                 </h1>
