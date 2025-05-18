@@ -1,0 +1,184 @@
+const express = require("express");
+const router = express.Router();
+const adminController = require("../controllers/adminController");
+const categoryController = require("../controllers/categoryController");
+const authMiddleware = require("../middleware/authMiddleware");
+const adminMiddleware = require("../middleware/adminMiddleware");
+
+// Admin routes with authentication and admin role checks
+router.get(
+  "/admin/dashboard",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getDashboardData
+);
+router.get(
+  "/admin/events",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getAllEvents
+);
+router.get(
+  "/admin/users",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getAllUsers
+);
+router.get(
+  "/admin/roles",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getAllRoles
+);
+router.get(
+  "/admin/categories",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getAllCategories
+);
+router.get(
+  "/admin/bookings",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getAllBookings
+);
+router.get(
+  "/admin/tickets",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getAllTickets
+);
+router.get(
+  "/admin/ticket-types",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getAllTicketTypes
+);
+router.get(
+  "/admin/bills",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getAllBills
+);
+router.get(
+  "/admin/bills/:id",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getBillById
+);
+router.put(
+  "/admin/bills/:id/status",
+  authMiddleware,
+  adminMiddleware,
+  adminController.updateBillStatus
+);
+router.delete(
+  "/admin/bills/:id",
+  authMiddleware,
+  adminMiddleware,
+  adminController.deleteBill
+);
+router.get(
+  "/admin/bill-statuses",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getBillStatuses
+);
+router.get(
+  "/admin/payment-methods",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getPaymentMethods
+);
+router.get(
+  "/admin/reports/sales",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getSalesReport
+);
+router.get(
+  "/admin/reports/events",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getEventsReport
+);
+router.get(
+  "/admin/reports/bookings-by-city",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getBookingsByCity
+);
+router.get(
+  "/admin/reports/bookings-by-category",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getBookingsByCategory
+);
+
+// Event management endpoints
+router.post(
+  "/admin/events",
+  authMiddleware,
+  adminMiddleware,
+  adminController.createEvent
+);
+router.put(
+  "/admin/events/:id",
+  authMiddleware,
+  adminMiddleware,
+  adminController.updateEvent
+);
+router.delete(
+  "/admin/events/:id",
+  authMiddleware,
+  adminMiddleware,
+  adminController.deleteEvent
+);
+
+// User management endpoints
+router.put(
+  "/admin/users/:id",
+  authMiddleware,
+  adminMiddleware,
+  adminController.updateUser
+);
+router.delete(
+  "/admin/users/:id",
+  authMiddleware,
+  adminMiddleware,
+  adminController.deleteUser
+);
+router.put(
+  "/admin/users/:id/role",
+  authMiddleware,
+  adminMiddleware,
+  adminController.updateUserRole
+);
+
+// Category management endpoints
+router.get(
+  "/admin/categories/:id",
+  authMiddleware,
+  adminMiddleware,
+  categoryController.getCategoryById
+);
+router.post(
+  "/admin/categories",
+  authMiddleware,
+  adminMiddleware,
+  categoryController.createCategory
+);
+router.put(
+  "/admin/categories/:id",
+  authMiddleware,
+  adminMiddleware,
+  categoryController.updateCategory
+);
+router.delete(
+  "/admin/categories/:id",
+  authMiddleware,
+  adminMiddleware,
+  categoryController.deleteCategory
+);
+
+module.exports = router;
