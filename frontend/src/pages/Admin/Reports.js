@@ -55,6 +55,8 @@ const Reports = () => {
   const [eventsData, setEventsData] = useState([]);
   const [cityData, setCityData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
+  const API_URL =
+    process.env.REACT_APP_API_URL + "/api" || "http://localhost:3001/api";
 
   const navigate = useNavigate();
 
@@ -92,7 +94,7 @@ const Reports = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:3001/api/admin/reports/sales?startDate=${startDate}&endDate=${endDate}`,
+        `${API_URL}/admin/reports/sales?startDate=${startDate}&endDate=${endDate}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -120,14 +122,11 @@ const Reports = () => {
         return;
       }
 
-      const response = await axios.get(
-        "http://localhost:3001/api/admin/reports/events",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/admin/reports/events`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setEventsData(response.data);
       setLoading(false);

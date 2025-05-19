@@ -52,7 +52,8 @@ const Bookings = () => {
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-
+  const API_URL =
+    process.env.REACT_APP_API_URL + "/api" || "http://localhost:3001/api";
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,14 +72,11 @@ const Bookings = () => {
         return;
       }
 
-      const response = await axios.get(
-        "http://localhost:3001/api/admin/bookings",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/admin/bookings`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setBookings(response.data);
       setFilteredBookings(response.data);

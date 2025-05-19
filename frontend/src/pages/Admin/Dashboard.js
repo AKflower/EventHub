@@ -46,6 +46,8 @@ const Dashboard = () => {
     upcomingEvents: [],
   });
   const navigate = useNavigate();
+  const API_URL =
+    process.env.REACT_APP_API_URL + "/api" || "http://localhost:3001/api";
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -56,14 +58,11 @@ const Dashboard = () => {
           return;
         }
 
-        const response = await axios.get(
-          "http://localhost:3001/api/admin/dashboard",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/admin/dashboard`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setDashboardData(response.data);
         setLoading(false);

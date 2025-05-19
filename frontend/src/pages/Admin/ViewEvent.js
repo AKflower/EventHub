@@ -73,7 +73,8 @@ const ViewEvent = () => {
     fetchTicketTypes();
     fetchCategories();
   }, [eventId]);
-
+  const API_URL =
+    process.env.REACT_APP_API_URL + "/api" || "http://localhost:3001/api";
   const fetchEventDetails = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -82,14 +83,11 @@ const ViewEvent = () => {
         return;
       }
 
-      const response = await fetch(
-        `http://localhost:3001/api/events/${eventId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/events/${eventId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch event details");
@@ -266,7 +264,7 @@ const ViewEvent = () => {
           borderRadius: 2,
           background: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${
             event.coverImg
-              ? `http://localhost:3001/api/galleries/${event.coverImg}`
+              ? `${API_URL}/galleries/${event.coverImg}`
               : "https://source.unsplash.com/random/?event"
           })`,
           backgroundSize: "cover",
